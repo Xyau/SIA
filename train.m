@@ -1,5 +1,5 @@
 function retval = train (weights, entries,desired,learning,rounds)
-  currWeights = weights
+  currWeights = weights;
   prevWeights = weights;
   for i = [1:rounds]
      currWeights = trainEntries(currWeights,entries,desired,learning);
