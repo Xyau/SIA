@@ -1,14 +1,13 @@
 1;
-inputs = 2
-learning_factor = 0.05
-rounds = 50
-activation = @sign
+bits = 4
+learning_factor = 0.02
+rounds = 5
+activation = @(x) x
 
-E = buildBinaryEntries(inputs)
-f = @(x) [x(1)&x(2)]
+E = buildBinaryEntries(bits)
+f = @(x) [x(1)&x(2),x(3)&x(4)]
 S = buildBinaryOutput(E,f)
-E = denormalizeWithU(E)
-S = denormalize(S)
+E = addUmbral(E)
 W = rand(size(S)(2),size(E)(2))
 
 WN = train(W,E,S,learning_factor,rounds,activation)
