@@ -1,9 +1,12 @@
-function retval = trainSingle (weights, entry,desired,learning,activation,actDerivative,algorithm)
-  suma = suma(weights,entry);
-  out =activation(suma);
-  deltas = [];
-  for i = [1:size(desired)(2)]
-    deltas = [deltas; learning*(algorithm(desired(i),out(i),suma(i),actDerivative)).*entry;];
+function retval = trainSingleMulti (weights, desired,learning,activation,actDerivative,intermediateValues)
+  layers = size(intermediateValues)(2);
+  delta = actDerivative(intermediateValues{layers}) * (desired - intermediateValues{layers});
+  weights{size(weights)(2)} = weights{size(weights)(2)} + learning*delta*addUmbral(intermediateValues{layers-1});
+  for i = layers-1:-1:2
+    for j = 1 : size(weights{i-1})(1)
+      delta = actDerivative(intermediateValues{i}(j)) * weights{i}(j+1) * delta' ; 
+      weights{i-1}(j,:) = weights{i-1}(j,:) + learning * delta * addUmbral(intermediateValues{i-1});
+    endfor
   endfor
-  retval = weights + deltas;
+  retval = weights;
 endfunction
