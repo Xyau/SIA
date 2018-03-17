@@ -1,13 +1,11 @@
-function retval = trainSingleMulti (weights, desired,learning,activation,actDerivative,intermediateValues)
-  layers = size(intermediateValues)(2);
-  delta = actDerivative(intermediateValues{layers}) * (desired - intermediateValues{layers});
-  weights{size(weights)(2)} = weights{size(weights)(2)} + learning*delta*addUmbral(intermediateValues{layers-1});
+function retval = trainSingleMulti (weights, desired,learning,activation,actDerivative,V,h)
+  layers = size(V)(2);
+  delta = actDerivative(h{layers}) * (desired - V{layers});
+  weights{size(weights)(2)} = weights{size(weights)(2)} + learning*delta*addUmbral(V{layers-1});
   for i = layers-1:-1:2
-    deltaOld = delta;
-    for j = 1 : size(weights{i-1})(1)
-      delta = actDerivative(intermediateValues{i}(j)) * weights{i}(j+1) * deltaOld' ; 
-      weights{i-1}(j,:) = weights{i-1}(j,:) + learning * delta * addUmbral(intermediateValues{i-1});
-    endfor
+     aux = removeUmbral(weights{i})';
+     delta = actDerivative(h{i}) .* (aux * delta')'; 
+     weights{i-1} = weights{i-1}+ learning * delta' * addUmbral(V{i-1});
   endfor
   retval = weights;
 endfunction
