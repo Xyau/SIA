@@ -32,11 +32,19 @@ classdef Perceptron < handle
       this.backpropagate(V, h, expectedOutput);
     end
 
-    function learnAll(this, f)
-      patterns = Perceptron.buildBinaryEntries(size(this.network{1})(2)-1);
+    function learnAll(this)
+      [patterns , expected] = load_data('../Descargas/terrain06.txt');
       for i = 1:size(patterns)(1)
-        this.learn(patterns(i,:), f(patterns(i,:)));
-        this.costError = [this.costError; this.getError(patterns,f)];
+        this.learn(patterns(i,:), expected(i));
+        % this.costError = [this.costError; this.getError(patterns,expected)];
+      end
+    end
+
+    function [XY,Z] = testAll(this)
+      XY = Perceptron.buildXYEntries();      
+      Z = [];
+      for i = 1:size(XY )(1)
+        Z = [Z;this.result(XY(i,:))];
       end
     end
 
@@ -49,7 +57,11 @@ classdef Perceptron < handle
       h{1} = input;
       for i = 1:size(this.network)(2)
         h{i+1} = (this.network{i}*(Perceptron.addThreshold(V{i}))')';
-        V{i+1} = this.activation((this.network{i}*(Perceptron.addThreshold(V{i}))'))';
+        if (i == size(this.network)(2))
+            V{i+1} = h{i+1};
+        else
+            V{i+1} = this.activation((this.network{i}*(Perceptron.addThreshold(V{i}))'))';
+        end
       end
     end
 
@@ -63,17 +75,17 @@ classdef Perceptron < handle
 
     function deltas = calculateDeltas(this, V, h, expectedOutput)
       layers = size(this.network)(2);
-      deltas{layers} = this.diffActivation(h{layers+1}).*(expectedOutput - V{layers+1});
+      deltas{layers} = ones(size(h{layers+1})).*(expectedOutput - V{layers+1});
       for k = layers:-1:2
         weights = Perceptron.removeThreshold(this.network{k});
         deltas{k-1} = this.diffActivation(h{k}).*(deltas{k}*weights);
       end
     end
 
-    function plotCost = getError(this,patterns,f)
+    function plotCost = getError(this,patterns,output)
       e = 0;
       for i = 1 : size(patterns)(1)
-        e += (f(patterns(i,:)) - this.result(patterns(i,:)))** 2;
+        e += (output(i) - this.result(patterns(i,:)))** 2;
       end
       e /= 2* size(patterns)(1);
       this.costIndex += 1;
@@ -105,6 +117,16 @@ classdef Perceptron < handle
             row = horzcat(row,bitget(i,n-j));
          end
          X = vertcat(X,row);
+      end
+      retval = X;
+    end
+
+    function retval = buildXYEntries ()
+      X = [];
+      for i = [-3:0.1:3]
+         for j = [-3:0.1:3]
+          X = [X;[i,j]];
+         end
       end
       retval = X;
     end
