@@ -52,6 +52,7 @@ classdef Perceptron < handle
 
     function learnAll(this)
       [patterns , expected] = load_data('../Descargas/terrain06.data');
+      patterns
       for j = 1:100
         printf('%d\n',j);
         fflush(stdout);
@@ -181,8 +182,8 @@ classdef Perceptron < handle
 
     function retval = buildXYEntries ()
       X = [];
-      for i = [0:0.05:1]
-         for j = [0:0.05:1]
+      for i = [-3.5:0.1:3.5]
+         for j = [-3.5:0.1:3.5]
           X = [X;[i,j]];
          end
       end
