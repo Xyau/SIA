@@ -51,44 +51,39 @@ classdef Perceptron < handle
     end
 
     function learnAll(this)
-      [patterns , expected] = load_data('../../../Downloads/terrain06.txt');
+      [patterns , expected] = load_data('../Descargas/terrain06.data');
       for j = 1:100
         printf('%d\n',j);
         fflush(stdout);
         for i = 1:size(patterns)(1)
           this.learn(patterns(i,:), expected(i));
-         % aux = this.getThisError(patterns,expected)
-            %      fflush(stdout);
-
-          %  if (aux < 0.001)
-          %  break;
-           % end
-
         end
+          aux = this.getError(patterns,expected)
+          this.costError = [this.costError; aux];
+                 fflush(stdout);
+
+            if (aux < 0.001)
+            break;
+            end
       end
     end
 
-    function learnWithError(this, f)
-      patterns = buildBinaryEntries(size(this.network{1})(2) - 1);
+    function learnWithError(this)
+      [patterns , expected] = load_data('../Descargas/terrain06.data');
       for i = 1:size(patterns)(1)
-        expected = [];
-        for j = 1:size(patterns)(1)
-          expected = [expected, f(patterns)];
-        end
-        this.learn(patterns(i,:), expected(i));
-        this.costError = [this.costError; this.getError(patterns,expected)];
+        this.learn(patterns(i,:), expected(i,:));
+      end
+      this.costError = [this.costError; this.getError(patterns,expected)];
 
-        if size(this.costError)(2) > 2
-          if this.costError(end) > this.costError(end - 1)
-            this.learningRate += this.learningRateIncrement;
-            this.momentumEnabled = 1;
-          elseif
-            this.learningRate -= this.learningRateDecrement * this.learningRate;
-            this.momentumEnabled = 0;
-            this.undo();
-          end
+      if size(this.costError)(2) > 2
+        if this.costError(end) < this.costError(end - 1)
+          this.learningRate += this.learningRateIncrement;
+          this.momentumEnabled = 1;
+        elseif
+          this.learningRate -= this.learningRateDecrement * this.learningRate;
+          this.momentumEnabled = 0;
+          this.undo();
         end
-
       end
     end
 
@@ -142,14 +137,12 @@ classdef Perceptron < handle
       plotCost = e;
     end
 
-    function plotCost = getError(this,patterns,output)
+    function e = getError(this,patterns,output)
       e = 0;
       for i = 1 : size(patterns)(1)
         e += (output(i) - this.result(patterns(i,:)))** 2;
       end
       e /= 2* size(patterns)(1);
-      this.costIndex += 1;
-      plotCost = [this.costIndex , e];
     end
 
     function undo(this)
@@ -188,8 +181,8 @@ classdef Perceptron < handle
 
     function retval = buildXYEntries ()
       X = [];
-      for i = [-3:0.1:3]
-         for j = [-3:0.1:3]
+      for i = [0:0.05:1]
+         for j = [0:0.05:1]
           X = [X;[i,j]];
          end
       end
