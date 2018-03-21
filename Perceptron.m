@@ -4,10 +4,21 @@ classdef Perceptron < handle
 
     learningRate;
     network = {};
+    previousNetwork = {};
+    % Activation function
     activation;
     diffActivation;
+    % Costs
     costError = [];
     costIndex = 0;
+    % Momentum
+    variation = {};
+    previousVariation = {};
+    momentum;
+    momentumEnabled = 1;
+    % Adaptative learning rate
+    learningRateIncrement = 0.1;
+    learningRateDecrement = 0.01;
 
   end
 
@@ -15,11 +26,15 @@ classdef Perceptron < handle
 
   methods
 
-    function this = Perceptron(learningRate, network, activation, diffActivation)
+    function this = Perceptron(learningRate, network, activation, diffActivation, momentum)
       this.learningRate = learningRate;
       this.activation = activation;
       this.diffActivation = diffActivation;
       this.network = network
+      this.momentum = momentum;
+      for i = 1:size(network)(2)
+        this.variation{i} = zeros(size(network{i}));
+      end
     end
 
     function output = result(this, input)
@@ -28,20 +43,49 @@ classdef Perceptron < handle
     end
 
     function learn(this, input, expectedOutput)
+      this.previousNetwork = this.network;
+      this.previousVariation = this.variation;
+
       [V, h] = this.propagate(input);
       this.backpropagate(V, h, expectedOutput);
     end
 
-    function learnAll(this)
-      [patterns , expected] = load_data('../Descargas/terrain06.txt');
+    function learnAll(this, f)
+      % [patterns , expected] = load_data('../Descargas/terrain06.txt');
+      patterns = buildBinaryEntries(size(this.network{1})(2) - 1);
       for i = 1:size(patterns)(1)
-        this.learn(patterns(i,:), expected(i));
+        this.learn(patterns(i,:), f(patterns(i,:)));
+        % this.learn(patterns(i,:), expected(i));
         % this.costError = [this.costError; this.getError(patterns,expected)];
       end
     end
 
+    function learnWithError(this, f)
+      patterns = buildBinaryEntries(size(this.network{1})(2) - 1);
+      for i = 1:size(patterns)(1)
+        expected = [];
+        for j = 1:size(patterns)(1)
+          expected = [expected, f(patterns)];
+        end
+        this.learn(patterns(i,:), expected(i));
+        this.costError = [this.costError; this.getError(patterns,expected)];
+
+        if size(this.costError)(2) > 2
+          if this.costError(end) > this.costError(end - 1)
+            this.learningRate += this.learningRateIncrement;
+            this.momentumEnabled = 1;
+          elseif
+            this.learningRate -= this.learningRateDecrement * this.learningRate;
+            this.momentumEnabled = 0;
+            this.undo();
+          end
+        end
+
+      end
+    end
+
     function [XY,Z] = testAll(this)
-      XY = Perceptron.buildXYEntries();      
+      XY = Perceptron.buildXYEntries();
       Z = [];
       for i = 1:size(XY )(1)
         Z = [Z;this.result(XY(i,:))];
@@ -69,7 +113,9 @@ classdef Perceptron < handle
       deltas = this.calculateDeltas(V, h, expectedOutput);
       for k = 1:size(this.network)(2)
         V{k} = Perceptron.addThreshold(V{k});
-        this.network{k} += this.learningRate * deltas{k}' * V{k};
+        this.variation{k} = this.learningRate * deltas{k}' * V{k} + ...
+                this.momentum * this.variation{k} * this.momentumEnabled;
+        this.network{k} += this.variation{k};
       end
     end
 
@@ -90,6 +136,11 @@ classdef Perceptron < handle
       e /= 2* size(patterns)(1);
       this.costIndex += 1;
       plotCost = [this.costIndex , e];
+    end
+
+    function undo(this)
+      this.variation = this.previousVariation;
+      this.network = this.previousNetwork;
     end
 
   end

@@ -5,8 +5,10 @@ function p = helper()
   a{3} = unifrnd(-1,1,1,4);
   f = @(x) tanh(x);
   f_prima = @(x) 1 - tanh(x).^2;
-  p = Perceptron(0.005, a, f, f_prima);
+  p = Perceptron(0.005, a, f, f_prima, 0.9);
   costerror = [];
 end
 
-f = @(x) xor(x(1),x(2),x(3))
+p = helper
+f = @(x) xor(x(1),x(2))
+p.learnWithError(f)
