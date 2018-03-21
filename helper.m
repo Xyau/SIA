@@ -1,8 +1,8 @@
 function p = helper()
   a = {}
-  a{1} = unifrnd(-1,1,8,3);
-  a{2} = unifrnd(-1,1,3,9);
-  a{3} = unifrnd(-1,1,1,4);
+  a{1} = unifrnd(-0.5,0.5,12,3);
+  a{2} = unifrnd(-0.5,0.5,13,13);
+  a{3} = unifrnd(-0.5,0.5,1,14);
   f = @(x) tanh(x);
   f_prima = @(x) 1 - tanh(x).^2;
   p = Perceptron(0.005, a, f, f_prima, 0.9);

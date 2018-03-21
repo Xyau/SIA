@@ -50,13 +50,21 @@ classdef Perceptron < handle
       this.backpropagate(V, h, expectedOutput);
     end
 
-    function learnAll(this, f)
-      % [patterns , expected] = load_data('../Descargas/terrain06.txt');
-      patterns = buildBinaryEntries(size(this.network{1})(2) - 1);
-      for i = 1:size(patterns)(1)
-        this.learn(patterns(i,:), f(patterns(i,:)));
-        % this.learn(patterns(i,:), expected(i));
-        % this.costError = [this.costError; this.getError(patterns,expected)];
+    function learnAll(this)
+      [patterns , expected] = load_data('../../../Downloads/terrain06.txt');
+      for j = 1:100
+        printf('%d\n',j);
+        fflush(stdout);
+        for i = 1:size(patterns)(1)
+          this.learn(patterns(i,:), expected(i));
+         % aux = this.getThisError(patterns,expected)
+            %      fflush(stdout);
+
+          %  if (aux < 0.001)
+          %  break;
+           % end
+
+        end
       end
     end
 
@@ -101,11 +109,7 @@ classdef Perceptron < handle
       h{1} = input;
       for i = 1:size(this.network)(2)
         h{i+1} = (this.network{i}*(Perceptron.addThreshold(V{i}))')';
-        if (i == size(this.network)(2))
-            V{i+1} = h{i+1};
-        else
-            V{i+1} = this.activation((this.network{i}*(Perceptron.addThreshold(V{i}))'))';
-        end
+        V{i+1} = this.activation((this.network{i}*(Perceptron.addThreshold(V{i}))'))';
       end
     end
 
@@ -121,11 +125,21 @@ classdef Perceptron < handle
 
     function deltas = calculateDeltas(this, V, h, expectedOutput)
       layers = size(this.network)(2);
-      deltas{layers} = ones(size(h{layers+1})).*(expectedOutput - V{layers+1});
+      deltas{layers} = ((1 - V{layers+1}.**2)).*(expectedOutput - V{layers+1});
       for k = layers:-1:2
         weights = Perceptron.removeThreshold(this.network{k});
-        deltas{k-1} = this.diffActivation(h{k}).*(deltas{k}*weights);
+        deltas{k-1} = ((1 - V{k}.**2)).*(deltas{k}*weights);
       end
+    end
+
+
+    function plotCost = getThisError(this,patterns,output)
+      e = 0;
+      for i = 1 : size(patterns)(1)
+        e += (output(i) - this.result(patterns(i,:)))** 2;
+      end
+      e /= 2* size(patterns)(1) ;
+      plotCost = e;
     end
 
     function plotCost = getError(this,patterns,output)
