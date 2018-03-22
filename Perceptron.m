@@ -22,6 +22,7 @@ classdef Perceptron < handle
     testRatio = 0.9;
     epsilon = 0.05;
     cutCondition = 0.00035;
+    terrainPath = 'hola';
   end
 
 %===============================================================================
@@ -53,7 +54,7 @@ classdef Perceptron < handle
     end
 
     function learnAll(this)
-      [patterns , expected] = load_data('../../../Downloads/terrain06.txt');
+      [patterns , expected] = load_data('../Downloads/terrain06.data');
       patterns_train = patterns(1 : floor(this.testRatio * size(patterns)(1)),:);
       expected_train = expected(1 : floor(this.testRatio * size(patterns)(1)),:);
       patterns_test = patterns(floor(this.testRatio * size(patterns)(1)+1):end,:);
@@ -75,7 +76,7 @@ classdef Perceptron < handle
 
     function learnWithError(this)
     
-      [patterns , expected] = load_data('../../../Downloads/terrain06.txt');
+      [patterns , expected] = load_data('../Downloads/terrain06.data');
       patterns_train = patterns(1 : floor(this.testRatio * size(patterns)(1)),:);
       expected_train = expected(1 : floor(this.testRatio * size(patterns)(1)),:);
       patterns_test = patterns(floor(this.testRatio * size(patterns)(1)+1):end,:);
@@ -105,6 +106,72 @@ classdef Perceptron < handle
       this.testNetwork(patterns_test , expected_test);
     end
 
+
+    function learnBatch(this)
+      [patterns , expected] = load_data('../Downloads/terrain06.data');
+      patterns_train = patterns(1 : floor(this.testRatio * size(patterns)(1)),:);
+      expected_train = expected(1 : floor(this.testRatio * size(patterns)(1)),:);
+      patterns_test = patterns(floor(this.testRatio * size(patterns)(1)+1):end,:);
+      expected_test = expected(floor(this.testRatio * size(patterns)(1)+1):end,:);
+      j = 0;
+      do
+        j++;
+        printf('%d\n',j);
+        fflush(stdout);
+        [V, h] = this.propagate(patterns_train);
+        this.backpropagate(V, h, expected_train);
+        deltas = this.calculateDeltas(V, h, expected_train);
+        for k = 1:size(this.network)(2)
+          V{k} = Perceptron.addThreshold(V{k});
+          this.variation{k} = this.learningRate * mean(deltas{k})' * mean(V{k}) + ...
+                this.momentum * this.variation{k} * this.momentumEnabled;
+          this.network{k} += mean(this.variation{k});
+         end   
+          aux = this.getError(patterns_train,expected_train)
+          this.costError = [this.costError; aux];
+          fflush(stdout);
+        until (aux < this.cutCondition)
+        this.testNetwork(patterns_test , expected_test); 
+    end
+
+
+    function learnBatchAdaptative(this)
+      [patterns , expected] = load_data('../Downloads/terrain06.data');
+      patterns_train = patterns(1 : floor(this.testRatio * size(patterns)(1)),:);
+      expected_train = expected(1 : floor(this.testRatio * size(patterns)(1)),:);
+      patterns_test = patterns(floor(this.testRatio * size(patterns)(1)+1):end,:);
+      expected_test = expected(floor(this.testRatio * size(patterns)(1)+1):end,:);
+      j = 0;
+      do
+        j++;
+        printf('%d\n',j);
+        fflush(stdout);
+        [V, h] = this.propagate(patterns_train);
+        this.backpropagate(V, h, expected_train);
+        deltas = this.calculateDeltas(V, h, expected_train);
+        for k = 1:size(this.network)(2)
+          V{k} = Perceptron.addThreshold(V{k});
+          this.variation{k} = this.learningRate * deltas{k}' * V{k}+ ...
+                this.momentum * this.variation{k} * this.momentumEnabled;
+          this.network{k} += this.variation{k};
+         end   
+          aux = this.getError(patterns_train,expected_train)
+          this.costError = [this.costError; aux];
+          fflush(stdout);
+          if size(this.costError)(2) > 2
+            if this.costError(end) < this.costError(end - 1)
+              this.learningRate += this.learningRateIncrement;
+              this.momentumEnabled = 1;
+            else
+              this.learningRate -= this.learningRateDecrement * this.learningRate;
+              this.momentumEnabled = 0;
+              this.undo();
+            end
+          end
+        until (aux < this.cutCondition)
+        this.testNetwork(patterns_test , expected_test); 
+    end
+
     function [XY,Z] = generalize(this)
       XY = Perceptron.buildXYEntries();
       Z = [];
@@ -115,7 +182,7 @@ classdef Perceptron < handle
 
   
    function [XY,Z] = testTrainedPoints(this)
-      [patterns , expected] = load_data('../../../Downloads/terrain06.txt');
+      [patterns , expected] = load_data('../Downloads/terrain06.data');
       XY = patterns(1 : floor(this.testRatio * size(patterns)(1)),:);
       Z = [];
       for i = 1:size(XY)(1)
