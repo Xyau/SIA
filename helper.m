@@ -1,11 +1,12 @@
 function p = helper()
   a = {}
-  a{1} = unifrnd(-0.5,0.5,12,3);
-  a{2} = unifrnd(-0.5,0.5,12,13);
-  a{3} = unifrnd(-0.5,0.5,1,13);
+  a{1} = unifrnd(-0.5,0.5,40,3);
+  a{2} = unifrnd(-0.5,0.5,1,41);
+
   f = @(x) tanh(x);
   f_prima = @(x) 1 - tanh(x).^2;
-  p = Perceptron(0.005, a, f, f_prima, 0.9);
+  p = Perceptron(0.09, a, f, f_prima, 0);
+  %0.005 y 0.9 vs 0.1 y 0
   costerror = [];
 end
 

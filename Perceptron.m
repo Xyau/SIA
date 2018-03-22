@@ -19,7 +19,9 @@ classdef Perceptron < handle
     % Adaptative learning rate
     learningRateIncrement = 0.1;
     learningRateDecrement = 0.01;
-
+    testRatio = 0.9;
+    epsilon = 0.05;
+    cutCondition = 0.00035;
   end
 
 %===============================================================================
@@ -51,44 +53,59 @@ classdef Perceptron < handle
     end
 
     function learnAll(this)
-      [patterns , expected] = load_data('../Descargas/terrain06.data');
-      patterns
-      for j = 1:100
+      [patterns , expected] = load_data('../../../Downloads/terrain06.txt');
+      patterns_train = patterns(1 : floor(this.testRatio * size(patterns)(1)),:);
+      expected_train = expected(1 : floor(this.testRatio * size(patterns)(1)),:);
+      patterns_test = patterns(floor(this.testRatio * size(patterns)(1)+1):end,:);
+      expected_test = expected(floor(this.testRatio * size(patterns)(1)+1):end,:);
+      j = 0;
+      do
+        j++;
         printf('%d\n',j);
         fflush(stdout);
-        for i = 1:size(patterns)(1)
-          this.learn(patterns(i,:), expected(i));
+        for i = 1: size(patterns_train)(1)
+          this.learn(patterns_train(i,:), expected_train(i));
         end
-          aux = this.getError(patterns,expected)
+          aux = this.getError(patterns_train,expected_train)
           this.costError = [this.costError; aux];
-                 fflush(stdout);
-
-            if (aux < 0.001)
-            break;
-            end
-      end
+          fflush(stdout);
+      until (aux < this.cutCondition)
+      this.testNetwork(patterns_test , expected_test);
     end
 
     function learnWithError(this)
-      [patterns , expected] = load_data('../Descargas/terrain06.data');
-      for i = 1:size(patterns)(1)
-        this.learn(patterns(i,:), expected(i,:));
-      end
-      this.costError = [this.costError; this.getError(patterns,expected)];
-
-      if size(this.costError)(2) > 2
-        if this.costError(end) < this.costError(end - 1)
-          this.learningRate += this.learningRateIncrement;
-          this.momentumEnabled = 1;
-        else
-          this.learningRate -= this.learningRateDecrement * this.learningRate;
-          this.momentumEnabled = 0;
-          this.undo();
+    
+      [patterns , expected] = load_data('../../../Downloads/terrain06.txt');
+      patterns_train = patterns(1 : floor(this.testRatio * size(patterns)(1)),:);
+      expected_train = expected(1 : floor(this.testRatio * size(patterns)(1)),:);
+      patterns_test = patterns(floor(this.testRatio * size(patterns)(1)+1):end,:);
+      expected_test = expected(floor(this.testRatio * size(patterns)(1)+1):end,:);
+      j = 0;
+      do
+        j++;
+        printf('%d\n',j);
+        fflush(stdout);
+        for i = 1: size(patterns_train)(1)
+          this.learn(patterns_train(i,:), expected_train(i));
         end
-      end
+          aux = this.getError(patterns_train,expected_train)
+          this.costError = [this.costError; aux];
+          fflush(stdout);
+           if size(this.costError)(2) > 2
+              if this.costError(end) < this.costError(end - 1)
+                this.learningRate += this.learningRateIncrement;
+                this.momentumEnabled = 1;
+              else
+                this.learningRate -= this.learningRateDecrement * this.learningRate;
+                this.momentumEnabled = 0;
+                this.undo();
+              end
+            end
+      until (aux < this.cutCondition)
+      this.testNetwork(patterns_test , expected_test);
     end
 
-    function [XY,Z] = testAll(this)
+    function [XY,Z] = generalize(this)
       XY = Perceptron.buildXYEntries();
       Z = [];
       for i = 1:size(XY )(1)
@@ -96,8 +113,20 @@ classdef Perceptron < handle
       end
     end
 
-  end
+  
+   function [XY,Z] = testTrainedPoints(this)
+      [patterns , expected] = load_data('../../../Downloads/terrain06.txt');
+      XY = patterns(1 : floor(this.testRatio * size(patterns)(1)),:);
+      Z = [];
+      for i = 1:size(XY)(1)
+        Z = [Z;this.result(XY(i,:))];
+      end
+    end
 
+  
+  
+  
+  end
   methods (Access = private)
 
     function [V,h] = propagate(this, input)
@@ -129,14 +158,6 @@ classdef Perceptron < handle
     end
 
 
-    function plotCost = getThisError(this,patterns,output)
-      e = 0;
-      for i = 1 : size(patterns)(1)
-        e += (output(i) - this.result(patterns(i,:)))** 2;
-      end
-      e /= 2* size(patterns)(1) ;
-      plotCost = e;
-    end
 
     function e = getError(this,patterns,output)
       e = 0;
@@ -144,6 +165,16 @@ classdef Perceptron < handle
         e += (output(i) - this.result(patterns(i,:)))** 2;
       end
       e /= 2* size(patterns)(1);
+    end
+    
+     function e = testNetwork(this,patterns,output)
+      s = 0;
+      for i = 1 : size(patterns)(1)
+        if abs(output(i) - this.result(patterns(i,:))) < this.epsilon
+            s++;
+        end
+      end
+      printf("%d de exito\n",s / size(patterns)(1));
     end
 
     function undo(this)
