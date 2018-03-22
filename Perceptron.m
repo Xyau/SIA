@@ -80,7 +80,7 @@ classdef Perceptron < handle
         if this.costError(end) < this.costError(end - 1)
           this.learningRate += this.learningRateIncrement;
           this.momentumEnabled = 1;
-        elseif
+        else
           this.learningRate -= this.learningRateDecrement * this.learningRate;
           this.momentumEnabled = 0;
           this.undo();
