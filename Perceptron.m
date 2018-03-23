@@ -19,10 +19,10 @@ classdef Perceptron < handle
     % Adaptative learning rate
     learningRateIncrement = 0.1;
     learningRateDecrement = 0.01;
-    testRatio = 0.9;
+    trainRatio = 0.9;
     epsilon = 0.05;
-    cutCondition = 0.00035;
-    terrainPath = 'hola';
+    cutCondition = 0.0001;
+    terrainPath = '../../../Downloads/terrain06.txt';
   end
 
 %===============================================================================
@@ -54,11 +54,11 @@ classdef Perceptron < handle
     end
 
     function learnAll(this)
-      [patterns , expected] = load_data('../Downloads/terrain06.data');
-      patterns_train = patterns(1 : floor(this.testRatio * size(patterns)(1)),:);
-      expected_train = expected(1 : floor(this.testRatio * size(patterns)(1)),:);
-      patterns_test = patterns(floor(this.testRatio * size(patterns)(1)+1):end,:);
-      expected_test = expected(floor(this.testRatio * size(patterns)(1)+1):end,:);
+      [patterns , expected] = load_data(this.terrainPath);
+      patterns_train = patterns(1 : floor(this.trainRatio * size(patterns)(1)),:);
+      expected_train = expected(1 : floor(this.trainRatio * size(patterns)(1)),:);
+      patterns_test = patterns(floor(this.trainRatio * size(patterns)(1)+1):end,:);
+      expected_test = expected(floor(this.trainRatio * size(patterns)(1)+1):end,:);
       j = 0;
       do
         j++;
@@ -76,11 +76,11 @@ classdef Perceptron < handle
 
     function learnWithError(this)
     
-      [patterns , expected] = load_data('../Downloads/terrain06.data');
-      patterns_train = patterns(1 : floor(this.testRatio * size(patterns)(1)),:);
-      expected_train = expected(1 : floor(this.testRatio * size(patterns)(1)),:);
-      patterns_test = patterns(floor(this.testRatio * size(patterns)(1)+1):end,:);
-      expected_test = expected(floor(this.testRatio * size(patterns)(1)+1):end,:);
+      [patterns , expected] = load_data(this.terrainPath);
+      patterns_train = patterns(1 : floor(this.trainRatio * size(patterns)(1)),:);
+      expected_train = expected(1 : floor(this.trainRatio * size(patterns)(1)),:);
+      patterns_test = patterns(floor(this.trainRatio * size(patterns)(1)+1):end,:);
+      expected_test = expected(floor(this.trainRatio * size(patterns)(1)+1):end,:);
       j = 0;
       do
         j++;
@@ -108,24 +108,23 @@ classdef Perceptron < handle
 
 
     function learnBatch(this)
-      [patterns , expected] = load_data('../Downloads/terrain06.data');
-      patterns_train = patterns(1 : floor(this.testRatio * size(patterns)(1)),:);
-      expected_train = expected(1 : floor(this.testRatio * size(patterns)(1)),:);
-      patterns_test = patterns(floor(this.testRatio * size(patterns)(1)+1):end,:);
-      expected_test = expected(floor(this.testRatio * size(patterns)(1)+1):end,:);
+      [patterns , expected] = load_data(this.terrainPath);
+      patterns_train = patterns(1 : floor(this.trainRatio * size(patterns)(1)),:);
+      expected_train = expected(1 : floor(this.trainRatio * size(patterns)(1)),:);
+      patterns_test = patterns(floor(this.trainRatio * size(patterns)(1)+1):end,:);
+      expected_test = expected(floor(this.trainRatio * size(patterns)(1)+1):end,:);
       j = 0;
       do
         j++;
         printf('%d\n',j);
         fflush(stdout);
         [V, h] = this.propagate(patterns_train);
-        this.backpropagate(V, h, expected_train);
         deltas = this.calculateDeltas(V, h, expected_train);
         for k = 1:size(this.network)(2)
           V{k} = Perceptron.addThreshold(V{k});
-          this.variation{k} = this.learningRate * mean(deltas{k})' * mean(V{k}) + ...
+          this.variation{k} = this.learningRate * deltas{k}' * V{k}+ ...
                 this.momentum * this.variation{k} * this.momentumEnabled;
-          this.network{k} += mean(this.variation{k});
+          this.network{k} += this.variation{k} / size(patterns_train)(1);
          end   
           aux = this.getError(patterns_train,expected_train)
           this.costError = [this.costError; aux];
@@ -136,24 +135,23 @@ classdef Perceptron < handle
 
 
     function learnBatchAdaptative(this)
-      [patterns , expected] = load_data('../Downloads/terrain06.data');
-      patterns_train = patterns(1 : floor(this.testRatio * size(patterns)(1)),:);
-      expected_train = expected(1 : floor(this.testRatio * size(patterns)(1)),:);
-      patterns_test = patterns(floor(this.testRatio * size(patterns)(1)+1):end,:);
-      expected_test = expected(floor(this.testRatio * size(patterns)(1)+1):end,:);
+      [patterns , expected] = load_data(this.terrainPath);
+      patterns_train = patterns(1 : floor(this.trainRatio * size(patterns)(1)),:);
+      expected_train = expected(1 : floor(this.trainRatio * size(patterns)(1)),:);
+      patterns_test = patterns(floor(this.trainRatio * size(patterns)(1)+1):end,:);
+      expected_test = expected(floor(this.trainRatio * size(patterns)(1)+1):end,:);
       j = 0;
       do
         j++;
         printf('%d\n',j);
         fflush(stdout);
         [V, h] = this.propagate(patterns_train);
-        this.backpropagate(V, h, expected_train);
         deltas = this.calculateDeltas(V, h, expected_train);
         for k = 1:size(this.network)(2)
           V{k} = Perceptron.addThreshold(V{k});
           this.variation{k} = this.learningRate * deltas{k}' * V{k}+ ...
                 this.momentum * this.variation{k} * this.momentumEnabled;
-          this.network{k} += this.variation{k};
+          this.network{k} += this.variation{k}/size(patterns_train)(1);
          end   
           aux = this.getError(patterns_train,expected_train)
           this.costError = [this.costError; aux];
@@ -182,13 +180,20 @@ classdef Perceptron < handle
 
   
    function [XY,Z] = testTrainedPoints(this)
-      [patterns , expected] = load_data('../Downloads/terrain06.data');
-      XY = patterns(1 : floor(this.testRatio * size(patterns)(1)),:);
+      [patterns , expected] = load_data(this.terrainPath);
+      XY = patterns(1 : floor(this.trainRatio * size(patterns)(1)),:);
       Z = [];
       for i = 1:size(XY)(1)
         Z = [Z;this.result(XY(i,:))];
       end
     end
+    
+     function [XY,Z] = getOriginalData(this)
+      [XY , Z] = load_data(this.terrainPath);
+       XY = XY(1 : floor(this.trainRatio * size(XY)(1)),:);
+       Z = Z(1 : floor(this.trainRatio * size(Z)(1)),:);
+     end
+
 
   
   
