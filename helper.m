@@ -7,7 +7,6 @@ function p = helper()
   f_prima = @(x) 1 - tanh(x).^2;
   p = Perceptron(0.09, a, f, f_prima, 0);
   %0.005 y 0.9 vs 0.1 y 0
-  costerror = [];
 end
 
 p = helper

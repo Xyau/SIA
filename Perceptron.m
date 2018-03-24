@@ -75,7 +75,7 @@ classdef Perceptron < handle
     end
 
     function learnWithError(this)
-    
+
       [patterns , expected] = load_data(this.terrainPath);
       patterns_train = patterns(1 : floor(this.trainRatio * size(patterns)(1)),:);
       expected_train = expected(1 : floor(this.trainRatio * size(patterns)(1)),:);
@@ -125,12 +125,12 @@ classdef Perceptron < handle
           this.variation{k} = this.learningRate * deltas{k}' * V{k}+ ...
                 this.momentum * this.variation{k} * this.momentumEnabled;
           this.network{k} += this.variation{k} / size(patterns_train)(1);
-         end   
+         end
           aux = this.getError(patterns_train,expected_train)
           this.costError = [this.costError; aux];
           fflush(stdout);
         until (aux < this.cutCondition)
-        this.testNetwork(patterns_test , expected_test); 
+        this.testNetwork(patterns_test , expected_test);
     end
 
 
@@ -152,7 +152,7 @@ classdef Perceptron < handle
           this.variation{k} = this.learningRate * deltas{k}' * V{k}+ ...
                 this.momentum * this.variation{k} * this.momentumEnabled;
           this.network{k} += this.variation{k}/size(patterns_train)(1);
-         end   
+         end
           aux = this.getError(patterns_train,expected_train)
           this.costError = [this.costError; aux];
           fflush(stdout);
@@ -167,7 +167,7 @@ classdef Perceptron < handle
             end
           end
         until (aux < this.cutCondition)
-        this.testNetwork(patterns_test , expected_test); 
+        this.testNetwork(patterns_test , expected_test);
     end
 
     function [XY,Z] = generalize(this)
@@ -178,7 +178,7 @@ classdef Perceptron < handle
       end
     end
 
-  
+
    function [XY,Z] = testTrainedPoints(this)
       [patterns , expected] = load_data(this.terrainPath);
       XY = patterns(1 : floor(this.trainRatio * size(patterns)(1)),:);
@@ -187,7 +187,7 @@ classdef Perceptron < handle
         Z = [Z;this.result(XY(i,:))];
       end
     end
-    
+
      function [XY,Z] = getOriginalData(this)
       [XY , Z] = load_data(this.terrainPath);
        XY = XY(1 : floor(this.trainRatio * size(XY)(1)),:);
@@ -195,9 +195,9 @@ classdef Perceptron < handle
      end
 
 
-  
-  
-  
+
+
+
   end
   methods (Access = private)
 
@@ -238,7 +238,7 @@ classdef Perceptron < handle
       end
       e /= 2* size(patterns)(1);
     end
-    
+
      function e = testNetwork(this,patterns,output)
       s = 0;
       for i = 1 : size(patterns)(1)
@@ -246,7 +246,7 @@ classdef Perceptron < handle
             s++;
         end
       end
-      printf("%d de exito\n",s / size(patterns)(1));
+      printf('%d de exito\n',s / size(patterns)(1));
     end
 
     function undo(this)
