@@ -1,0 +1,9 @@
+g="tanh"
+beta = 1
+eta=0.1 
+momentum=0.9
+adaptative=0
+incrementRate=0
+decrementRate=0
+hidden_layers=1
+neurons=[40]
