@@ -6,7 +6,8 @@ function p = configurate(filename)
     f = @(x) tanh(x);
     f_prima = @(x) 1 - tanh(x).^2;
   elseif func{1} == 'exp'
-
+    f = @(x) sigmf(x, [2, 0]);
+    f_prima = @(x) 2 * x .* (1 - x);
   else
     printf('%s\n', 'Error, no valid function name');
     return;
