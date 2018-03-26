@@ -37,7 +37,7 @@ classdef Configurator < handle
       this.trainRatio=trainRatio;
 
     end
-    
+
     function p = run(this)
       if strcmp(this.g,'tanh')
         this.g = @(x) tanh(this.beta*x);
@@ -60,9 +60,9 @@ classdef Configurator < handle
 
       if strcmp(this.mode,'incremental')
         if this.adaptative == 1
-          p.learnWithError;
+          p.learnIterativeAdaptative;
         else
-          p.learnAll;
+          p.learnIterative;
         end
       else
          if this.adaptative == 1
@@ -73,7 +73,6 @@ classdef Configurator < handle
       end
       plotField;
     end
-  
-  end 
+
+  end
 end
-    

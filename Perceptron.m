@@ -59,7 +59,7 @@ classdef Perceptron < handle
       this.backpropagate(V, h, expectedOutput);
     end
 
-    function learnAll(this)
+    function learnIterative(this)
       [patterns , expected] = load_data(this.terrainPath);
       patterns_train = patterns(1 : floor(this.trainRatio * size(patterns)(1)),:);
       expected_train = expected(1 : floor(this.trainRatio * size(patterns)(1)),:);
@@ -80,7 +80,7 @@ classdef Perceptron < handle
       this.testNetwork(patterns_test , expected_test);
     end
 
-    function learnWithError(this)
+    function learnIterativeAdaptative(this)
 
       [patterns , expected] = load_data(this.terrainPath);
       patterns_train = patterns(1 : floor(this.trainRatio * size(patterns)(1)),:);
