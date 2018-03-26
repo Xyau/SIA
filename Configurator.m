@@ -38,7 +38,7 @@ classdef Configurator < handle
 
     end
     
-    function weights = run(this)
+    function p = run(this)
       if strcmp(this.g,'tanh')
         this.g = @(x) tanh(this.beta*x);
         this.g_prima = @(x) this.beta*(1 - x.^2);
@@ -71,7 +71,7 @@ classdef Configurator < handle
           p.learnBatch;
         end
       end
-      weights = 1;
+      plotField;
     end
   
   end 

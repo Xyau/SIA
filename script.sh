@@ -1,3 +1,3 @@
-octave-cli --eval "$1;runNetwork"
+octave-cli  --persist --eval "$1;runNetwork"
 
 
