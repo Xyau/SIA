@@ -1,5 +1,5 @@
 p = helper
-p.learnIterative;
+p.learnIncremental;
 [XY,Z] = p.testTrainedPoints;
 [XYo , Zo] = p.getOriginalData;
 max(abs(Z .- Zo))

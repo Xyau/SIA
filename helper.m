@@ -11,4 +11,4 @@ end
 
 p = helper
 f = @(x) xor(x(1),x(2))
-p.learnIterativeAdaptative(f)
+p.learnIncrementalAdaptative(f)

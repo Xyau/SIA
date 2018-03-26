@@ -60,9 +60,9 @@ classdef Configurator < handle
 
       if strcmp(this.mode,'incremental')
         if this.adaptative == 1
-          p.learnIterativeAdaptative;
+          p.learnIncrementalAdaptative;
         else
-          p.learnIterative;
+          p.learnIncremental;
         end
       else
          if this.adaptative == 1
