@@ -17,24 +17,30 @@ classdef Perceptron < handle
     momentum;
     momentumEnabled = 1;
     % Adaptative learning rate
-    learningRateIncrement = 0.1;
-    learningRateDecrement = 0.01;
-    trainRatio = 0.9;
-    epsilon = 0.05;
-    cutCondition = 0.0001;
-    terrainPath = '../../../Downloads/terrain06.txt';
+    learningRateIncrement ;
+    learningRateDecrement ;
+    trainRatio ;
+    epsilon ;
+    cutCondition;
+    terrainPath ;
   end
 
 %===============================================================================
 
   methods
 
-    function this = Perceptron(learningRate, network, activation, diffActivation, momentum)
+    function this = Perceptron(learningRate, network, activation, diffActivation, momentum,terrainPath,epsilon,cutCondition,learningRateIncrement,learningRateDecrement,trainRatio)
       this.learningRate = learningRate;
       this.activation = activation;
       this.diffActivation = diffActivation;
-      this.network = network
-      this.momentum = momentum;
+      this.network = network;
+      this.terrainPath = terrainPath;
+      this.epsilon = epsilon;
+      this.cutCondition = cutCondition;
+      this.learningRateIncrement = learningRateIncrement;
+      this.learningRateDecrement = learningRateDecrement;
+      this.trainRatio = trainRatio;
+      this.momentum=momentum;
       for i = 1:size(network)(2)
         this.variation{i} = zeros(size(network{i}));
       end
@@ -222,10 +228,10 @@ classdef Perceptron < handle
 
     function deltas = calculateDeltas(this, V, h, expectedOutput)
       layers = size(this.network)(2);
-      deltas{layers} = ((1 - V{layers+1}.**2)).*(expectedOutput - V{layers+1});
+      deltas{layers} = (this.diffActivation(V{layers+1})).*(expectedOutput - V{layers+1});
       for k = layers:-1:2
         weights = Perceptron.removeThreshold(this.network{k});
-        deltas{k-1} = ((1 - V{k}.**2)).*(deltas{k}*weights);
+        deltas{k-1} = (this.diffActivation(V{k})).*(deltas{k}*weights);
       end
     end
 
