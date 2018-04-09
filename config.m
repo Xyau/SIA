@@ -11,4 +11,6 @@ neurons=[40];
 trainRatio = 0.9;
 epsilon = 0.05;;
 cutCondition = 0.00035;
-terrainPath = '../Descargas/terrain06.data';;
+terrainPath = 'terrain06.data';
+seed = 1111111;
+maxIterations=100;
