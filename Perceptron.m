@@ -243,6 +243,9 @@ classdef Perceptron < handle
         e += (output(i) - this.result(patterns(i,:)))** 2;
       end
       e /= 2* size(patterns)(1);
+      pause(0);
+      plot([this.costError;e]);
+      refreshdata;
     end
 
      function e = testNetwork(this,patterns,output)
