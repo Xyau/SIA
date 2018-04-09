@@ -98,7 +98,7 @@ classdef Perceptron < handle
           aux = this.getError(patterns_train,expected_train)
           this.costError = [this.costError; aux];
           fflush(stdout);
-           if size(this.costError)(2) > 2
+           if size(this.costError)(1) > 2
               if this.costError(end) < this.costError(end - 1)
                 this.learningRate += this.learningRateIncrement;
                 this.momentumEnabled = 1;
