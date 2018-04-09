@@ -23,13 +23,14 @@ classdef Perceptron < handle
     epsilon ;
     cutCondition;
     terrainPath ;
+    maxIterations;
   end
 
 %===============================================================================
 
   methods
 
-    function this = Perceptron(learningRate, network, activation, diffActivation, momentum,terrainPath,epsilon,cutCondition,learningRateIncrement,learningRateDecrement,trainRatio)
+    function this = Perceptron(learningRate, network, activation, diffActivation, momentum,terrainPath,epsilon,cutCondition,learningRateIncrement,learningRateDecrement,trainRatio,maxIterations)
       this.learningRate = learningRate;
       this.activation = activation;
       this.diffActivation = diffActivation;
@@ -41,6 +42,7 @@ classdef Perceptron < handle
       this.learningRateDecrement = learningRateDecrement;
       this.trainRatio = trainRatio;
       this.momentum=momentum;
+      this.maxIterations=maxIterations;
       for i = 1:size(network)(2)
         this.variation{i} = zeros(size(network{i}));
       end
@@ -76,7 +78,7 @@ classdef Perceptron < handle
           aux = this.getError(patterns_train,expected_train)
           this.costError = [this.costError; aux];
           fflush(stdout);
-      until (aux < this.cutCondition)
+      until (aux < this.cutCondition || j > this.maxIterations)
       this.testNetwork(patterns_test , expected_test);
     end
 
@@ -108,7 +110,7 @@ classdef Perceptron < handle
                 this.undo();
               end
             end
-      until (aux < this.cutCondition)
+      until (aux < this.cutCondition || j > this.maxIterations)
       this.testNetwork(patterns_test , expected_test);
     end
 
@@ -135,7 +137,7 @@ classdef Perceptron < handle
           aux = this.getError(patterns_train,expected_train)
           this.costError = [this.costError; aux];
           fflush(stdout);
-        until (aux < this.cutCondition)
+        until (aux < this.cutCondition || j > this.maxIterations)
         this.testNetwork(patterns_test , expected_test);
     end
 
@@ -174,7 +176,7 @@ classdef Perceptron < handle
               this.undo();
             end
           end
-        until (aux < this.cutCondition)
+        until (aux < this.cutCondition || j > this.maxIterations)
         this.testNetwork(patterns_test , expected_test);
     end
 
