@@ -151,6 +151,8 @@ classdef Perceptron < handle
         j++;
         printf('%d\n',j);
         fflush(stdout);
+        this.previousNetwork = this.network;
+        this.previousVariation = this.variation;
         [V, h] = this.propagate(patterns_train);
         deltas = this.calculateDeltas(V, h, expected_train);
         for k = 1:size(this.network)(2)
