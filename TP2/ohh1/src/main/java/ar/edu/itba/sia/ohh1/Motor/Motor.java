@@ -53,7 +53,7 @@ public class Motor<E> {
         System.out.println(current.getDepth());
         Node aux = current;
         while (aux != null) {
-            ((Ohh1State)aux.getState()).printBoard();
+            System.out.println(aux.getState().toString());
             aux = aux.getParent();
         }
         System.out.println("Nodes expanded: " + nodesExpanded);
@@ -88,7 +88,7 @@ public class Motor<E> {
         }
         Node aux = current;
         while (aux != null) {
-            ((Ohh1State)aux.getState()).printBoard();
+            System.out.println(aux.getState().toString());
             aux = aux.getParent();
         }
     }

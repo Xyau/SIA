@@ -45,6 +45,19 @@ public class Ohh1State {
     }
 
     @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for ( int i = 0 ; i < board.length ; i++){
+            for( int j = 0 ; j < board[i].length ; j++){
+                sb.append(board[i][j]+" ");
+            }
+            sb.append("\n");
+        }
+        sb.append("\n");
+        return sb.toString();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
