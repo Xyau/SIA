@@ -19,10 +19,10 @@ public class IntegerGenotype implements Genotype {
     @Override
     public Phenotype getMutation(Phenotype phenotype, Double mutationRate) {
         Phenotype mutatedPhenotype = phenotype;
-        if(mutationRate>0.4 && phenotype.getValue() < max-1){
-            mutatedPhenotype = new IntegerPhenotype(name,phenotype.getValue()+1);
-        } else if( mutationRate < -0.4 && phenotype.getValue() > min+1){
-            mutatedPhenotype = new IntegerPhenotype(name,phenotype.getValue()-1);
+        if(mutationRate>0.4 && phenotype.getValue("") < max-1){
+            mutatedPhenotype = new IntegerPhenotype(name,phenotype.getValue("").intValue()+1);
+        } else if( mutationRate < -0.4 && phenotype.getValue("") > min+1){
+            mutatedPhenotype = new IntegerPhenotype(name,phenotype.getValue("").intValue()-1);
         }
         return mutatedPhenotype;
     }

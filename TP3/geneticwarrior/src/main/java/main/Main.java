@@ -1,6 +1,5 @@
 package main;
 
-import breeders.AvergageBreeder;
 import experiment.Experiment;
 import experiment.ExperimentBuilder;
 import individuals.BitsetIndividual;

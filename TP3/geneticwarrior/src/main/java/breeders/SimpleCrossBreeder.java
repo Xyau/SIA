@@ -40,9 +40,10 @@ public class SimpleCrossBreeder implements Breeder {
         List<Phenotype> phenotypes = new ArrayList<>();
         for (Genotype genotype:species.getGenotypes()){
             String name = genotype.getName();
-            Integer valueMother = mother.getGenes().getPhenotypeByName(name).getValue();
-            Integer valueFather = father.getGenes().getPhenotypeByName(name).getValue();
-            phenotypes.add(genotype.getPhenotypeValue(genotypeNumber>cross?valueMother:valueFather));
+            Phenotype phenotypeMother = mother.getGenes().getPhenotypeByName(name);
+            Phenotype phenotypeFather = father.getGenes().getPhenotypeByName(name);
+            phenotypes.add(genotypeNumber<cross?phenotypeMother:phenotypeFather);
+            genotypeNumber++;
         }
         Genes genes = new Genes(phenotypes);
         return mother.incubate(genes);

@@ -16,6 +16,4 @@ public interface Genotype {
     Phenotype getRandomPhenotype(Random random);
 
     String getName();
-
-    Phenotype getPhenotypeValue(Integer value);
 }

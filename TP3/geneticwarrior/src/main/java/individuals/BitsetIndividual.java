@@ -15,24 +15,27 @@ public class BitsetIndividual extends Individual {
     Species species;
 
     public BitsetIndividual(Random random) {
-        species = getSpecies();
+        species = generateSpecies();
         this.genes = species.getRandomGenes(random);
     }
 
-    public BitsetIndividual(Integer strength, Integer agility) {
-        species = getSpecies();
-        Iterator<Integer> valueIterator = Utils.iteratorFrom(strength,agility);
-        this.genes = new Genes(species.getGenotypes().stream()
-                .map(genotype -> genotype.getPhenotypeValue(valueIterator.next()))
-                .collect(Collectors.toList()));
+    private Species generateSpecies(){
+        List<Genotype> genotypes = new ArrayList<>();
+        genotypes.add(new IntegerGenotype(5,15,"S"));
+        genotypes.add(new IntegerGenotype(0,10,"A"));
+        Species species = new Species("BitSet",genotypes);
+        return species;
     }
+
+    @Override
+    public Number getFitness() {
+        return genes.getPhenotypeByName("S").getValue("") +
+                genes.getPhenotypeByName("A").getValue("") ;
+    }
+
 
     public BitsetIndividual(Genes genes) {
         this.genes = genes;
-    }
-
-    public Genes getGenes() {
-        return genes;
     }
 
     @Override
@@ -45,17 +48,4 @@ public class BitsetIndividual extends Individual {
         return new BitsetIndividual(genes);
     }
 
-    @Override
-    public Number getFitness() {
-        return genes.getPhenotypeByName("S").getValue() +
-                genes.getPhenotypeByName("A").getValue() ;
-    }
-
-    public Species getSpecies(){
-        List<Genotype> genotypes = new ArrayList<>();
-        genotypes.add(new IntegerGenotype(5,15,"S"));
-        genotypes.add(new IntegerGenotype(0,10,"A"));
-        Species species = new Species("BitSet",genotypes);
-        return species;
-    }
 }

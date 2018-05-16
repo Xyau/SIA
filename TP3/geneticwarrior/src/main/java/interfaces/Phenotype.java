@@ -5,5 +5,5 @@ public interface Phenotype {
 
     String toString();
 
-    Integer getValue();
+    Double getValue(String key);
 }

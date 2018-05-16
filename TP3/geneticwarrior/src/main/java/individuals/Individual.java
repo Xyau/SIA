@@ -6,7 +6,12 @@ import genes.Species;
 import java.util.function.Supplier;
 
 public abstract class Individual {
-    abstract public Genes getGenes();
+    Species species;
+    Genes genes;
+
+    public Genes getGenes(){
+        return genes;
+    }
 
     //Return a NEW altered version of the individual
     abstract public Individual incubate(Genes alteredGenes);
@@ -16,7 +21,9 @@ public abstract class Individual {
 
     abstract public Number getFitness();
 
-    abstract public Species getSpecies();
+    public Species getSpecies(){
+        return species;
+    }
 
     public Number getFitness(Supplier<Number> entries){
         return getFitness();
