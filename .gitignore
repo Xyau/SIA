@@ -12,8 +12,11 @@
 
 TP3/geneticwarrior/target/
 TP3/geneticwarrior/.gradle/
+
 TP3/geneticwarrior/.idea/
-TP3/.idea
+TP3/.idea/
+
+.idea/
 # Package Files #
 *.jar
 *.war
