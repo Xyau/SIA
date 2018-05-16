@@ -10,18 +10,27 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class SimpleBitMutator implements Mutator {
-    Double mutationRatio;
-    Random random;
+public class SimpleMutator implements Mutator {
+    private Double mutationRatio;
+    private Double mutationStrenght;
+    private Random random;
 
-    public SimpleBitMutator(Double mutationRatio, Random random) {
+    public SimpleMutator(Double mutationRatio,Double mutationStrenght, Random random) {
+        if(mutationRatio > 1 || mutationRatio < 0) {
+            throw new IllegalArgumentException("Mutation ratio must be between 0 and 1");
+        }
+        if(mutationStrenght < 0) {
+            throw new IllegalArgumentException("mutation strenght must be >0");
+        }
         this.mutationRatio = mutationRatio;
+        this.mutationStrenght = mutationStrenght;
         this.random = random;
     }
 
     @Override
     public List<Individual> mutate(List<Individual> individualsToMutate) {
-        return individualsToMutate.stream().map( individual -> mutate(individual)).collect(Collectors.toList());
+        return individualsToMutate.stream().filter(x -> random.nextDouble() < mutationRatio)
+                .map( individual -> mutate(individual)).collect(Collectors.toList());
     }
 
     private Individual mutate(Individual individual){
@@ -29,7 +38,8 @@ public class SimpleBitMutator implements Mutator {
         Species species = individual.getSpecies();
         List<Phenotype> mutatedPhenotypes = species.getGenotypes().stream().map(genotype ->
                 genotype.getMutation(genes.getPhenotypeByName(genotype.getName()),
-                        random.nextDouble()*2-1)).collect(Collectors.toList());
+                        (random.nextDouble()*2-1)*mutationStrenght))
+                .collect(Collectors.toList());
         Genes mutatedGenes = new Genes(mutatedPhenotypes);
         return individual.incubate(mutatedGenes);
     }

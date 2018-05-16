@@ -36,10 +36,10 @@ public class Experiment {
         for (int i = 0; i < maxGenerations; i++) {
             champions = selector.selectChampions(pop);
             log.info("Selected champions: " + champions);
+            offspring = breeder.breedChampions(champions);
+            log.info("Champions offspring: " + offspring);
             mutatedChampions = mutator.mutate(champions);
             log.info("Mutated champions: " + mutatedChampions);
-            offspring = breeder.breedChampions(mutatedChampions);
-            log.info("Champions offspring: " + offspring);
             pop = offspring;
             pop.addAll(mutatedChampions);
             log.info("End of round: " + pop);

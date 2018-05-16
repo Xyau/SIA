@@ -3,7 +3,7 @@ package breeders;
 import individuals.BitsetIndividual;
 import individuals.Individual;
 import interfaces.Mutator;
-import mutators.SimpleBitMutator;
+import mutators.SimpleMutator;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -13,10 +13,12 @@ import java.util.Random;
 public class MutatorTest {
     @Test
     public void SimpleCrossBreederTest(){
-        Random random = new Random();
-        Mutator mutator = new SimpleBitMutator(0d,random);
+        Random random = new Random(1011);
+        Mutator mutator = new SimpleMutator(0.5d,3d,random);
         List<Individual> startingPop = new ArrayList<>();
-        startingPop.add(new BitsetIndividual(random));
+
+        startingPop.add(new BitsetIndividual(10,10));
+        startingPop.add(new BitsetIndividual(10,12));
         System.out.println(startingPop);
 
         List<Individual> offspring = mutator.mutate(startingPop);

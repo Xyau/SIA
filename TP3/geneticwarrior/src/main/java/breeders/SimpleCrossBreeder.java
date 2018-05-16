@@ -2,10 +2,14 @@ package breeders;
 
 import genes.Genes;
 import genes.Species;
-import interfaces.Breeder;
 import individuals.Individual;
+import interfaces.Breeder;
+import interfaces.Genotype;
+import interfaces.Phenotype;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class SimpleCrossBreeder implements Breeder {
@@ -15,6 +19,7 @@ public class SimpleCrossBreeder implements Breeder {
         this.random = random;
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public List<Individual> breedChampions(List<Individual> champions) {
         if(champions.size() == 1){
@@ -30,12 +35,16 @@ public class SimpleCrossBreeder implements Breeder {
 
     private Individual breed(Individual mother, Individual father){
         Species species = mother.getSpecies();
-        Genes genes = new Genes(species.getGenotypes().stream().map(genotype -> {
-                String name = genotype.getName();
-                Integer valueMother = mother.getGenes().getPhenotypeByName(name).getValue();
-                Integer valueFather = father.getGenes().getPhenotypeByName(name).getValue();
-                return genotype.getPhenotypeValue((valueFather+valueMother)/2);
-            }).collect(Collectors.toList()));
+        Integer cross = random.nextInt(species.getGenotypes().size());
+        Integer genotypeNumber=0;
+        List<Phenotype> phenotypes = new ArrayList<>();
+        for (Genotype genotype:species.getGenotypes()){
+            String name = genotype.getName();
+            Integer valueMother = mother.getGenes().getPhenotypeByName(name).getValue();
+            Integer valueFather = father.getGenes().getPhenotypeByName(name).getValue();
+            phenotypes.add(genotype.getPhenotypeValue(genotypeNumber>cross?valueMother:valueFather));
+        }
+        Genes genes = new Genes(phenotypes);
         return mother.incubate(genes);
     }
 }

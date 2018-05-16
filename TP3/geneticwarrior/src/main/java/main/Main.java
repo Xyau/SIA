@@ -1,12 +1,11 @@
 package main;
 
-import breeders.SimpleCrossBreeder;
+import breeders.AvergageBreeder;
 import experiment.Experiment;
 import experiment.ExperimentBuilder;
 import individuals.BitsetIndividual;
 import individuals.Individual;
-import mutators.NoChangeMutator;
-import mutators.SimpleBitMutator;
+import mutators.SimpleMutator;
 import selectors.TopNSelector;
 
 import java.util.*;
@@ -20,9 +19,9 @@ public class Main {
 
         System.out.println(startingPop.get(0));
         ExperimentBuilder builder = new ExperimentBuilder();
-        builder.addSelector(new TopNSelector(10))
-                .addMutator(new SimpleBitMutator(1d,random))
-                .addBreeder(new SimpleCrossBreeder(new Random()))
+        builder.addSelector(new TopNSelector(1))
+                .addMutator(new SimpleMutator(0.2d,2d,random))
+                .addBreeder(new AvergageBreeder(new Random()))
                 .addMaxGenerations(100)
                 .addStartingPop(startingPop);
 

@@ -18,10 +18,8 @@ public class TopNSelector implements Selector {
 
     @Override
     public List<Individual> selectChampions(List<Individual> candidates) {
-        List<Individual> champions = new ArrayList<>();
-        champions.addAll(candidates);
-        Collections.sort(champions, Comparator.comparingInt(
-                o -> o.getFitness().intValue()));
-        return champions.stream().limit(selectedChampions).collect(Collectors.toList());
+        candidates.sort(Comparator.comparingInt(o->o.getFitness().intValue()));
+        List<Individual> champions = candidates.subList(0,Math.max(selectedChampions,candidates.size()-1));
+        return champions;
     }
 }
