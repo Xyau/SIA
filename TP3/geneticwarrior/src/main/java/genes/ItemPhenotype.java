@@ -24,6 +24,11 @@ public class ItemPhenotype implements Phenotype {
 
     @Override
     public Double getValue(String key) {
-        return bonusMap.get(key);
+        return bonusMap.get(BonusType.fromString(key));
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

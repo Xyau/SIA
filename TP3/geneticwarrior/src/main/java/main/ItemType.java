@@ -5,11 +5,11 @@ public enum ItemType {
 
     public ItemType fromString(String itemType){
         switch (itemType){
-            case "helmet":return HELMET;
-            case "weapon":return WEAPON;
-            case "boots":return BOOTS;
-            case "armor":return ARMOR;
-            case "gloves":return GLOVES;
+            case "HELMET":return HELMET;
+            case "WEAPON":return WEAPON;
+            case "BOOTS":return BOOTS;
+            case "ARMOR":return ARMOR;
+            case "GLOVES":return GLOVES;
         }
         throw new IllegalArgumentException("no such item name");
     }

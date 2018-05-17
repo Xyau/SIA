@@ -37,8 +37,4 @@ public class IntegerGenotype implements Genotype {
         return name;
     }
 
-    @Override
-    public Phenotype getPhenotypeValue(Integer value) {
-        return new IntegerPhenotype(name,value);
-    }
-}
+   }

@@ -17,8 +17,8 @@ public class MutatorTest {
         Mutator mutator = new SimpleMutator(0.5d,3d,random);
         List<Individual> startingPop = new ArrayList<>();
 
-        startingPop.add(new BitsetIndividual(10,10));
-        startingPop.add(new BitsetIndividual(10,12));
+        startingPop.add(new BitsetIndividual(random));
+        startingPop.add(new BitsetIndividual(random));
         System.out.println(startingPop);
 
         List<Individual> offspring = mutator.mutate(startingPop);

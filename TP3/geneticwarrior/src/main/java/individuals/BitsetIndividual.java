@@ -19,6 +19,11 @@ public class BitsetIndividual extends Individual {
         this.genes = species.getRandomGenes(random);
     }
 
+    private BitsetIndividual(Species species,Genes genes) {
+        this.species = species;
+        this.genes = genes;
+    }
+
     private Species generateSpecies(){
         List<Genotype> genotypes = new ArrayList<>();
         genotypes.add(new IntegerGenotype(5,15,"S"));
@@ -28,24 +33,20 @@ public class BitsetIndividual extends Individual {
     }
 
     @Override
-    public Number getFitness() {
-        return genes.getPhenotypeByName("S").getValue("") +
+    public Double getFitness() {
+        return 1.0* genes.getPhenotypeByName("S").getValue("") +
                 genes.getPhenotypeByName("A").getValue("") ;
     }
 
 
-    public BitsetIndividual(Genes genes) {
-        this.genes = genes;
-    }
-
     @Override
     public Individual incubate(Genes alteredGenes) {
-        return new BitsetIndividual(alteredGenes);
+        return new BitsetIndividual(species,alteredGenes);
     }
 
     @Override
     public Individual incubate() {
-        return new BitsetIndividual(genes);
+        return new BitsetIndividual(species,genes);
     }
 
 }
