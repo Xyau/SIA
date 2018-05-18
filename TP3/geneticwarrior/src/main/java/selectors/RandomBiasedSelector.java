@@ -17,7 +17,7 @@ public class RandomBiasedSelector extends BaseSelector implements Selector {
     public List<Individual> selectChampions(List<Individual> candidates) {
         List<Individual> champions = new ArrayList<>();
 
-        Double totalFitness = candidates.stream().collect(Collectors.summingDouble(ind-> ind.getFitness()));
+        Double totalFitness = candidates.stream().mapToDouble(ind -> ind.getFitness()).sum();
         Double accumulatedFitness=0D;
         NavigableMap<Double,Individual> map = new TreeMap<>();
         for (Individual individual:candidates){

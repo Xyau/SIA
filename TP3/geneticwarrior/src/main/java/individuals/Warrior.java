@@ -40,6 +40,15 @@ public class Warrior extends Individual {
         Species species = new Species("Warrior",genotypes);
         return species;
     }
+
+    public static List<Individual> generateIndividuals(Species species,Integer amount,Random random) {
+        List<Individual> pop = new ArrayList<>();
+        for (int i = 0; i < amount; i++) {
+            pop.add(new Warrior(species,species.getRandomGenes(random)));
+        }
+        return pop;
+    }
+
     @Override
     public Individual incubate(Genes alteredGenes) {
         return new Warrior(species,alteredGenes);

@@ -10,6 +10,7 @@ import interfaces.Phenotype;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class SimpleCrossBreeder implements Breeder {
     Random random;
@@ -24,6 +25,7 @@ public class SimpleCrossBreeder implements Breeder {
         if(champions.size() == 1){
             return champions;
         }
+        champions = champions.stream().distinct().sorted().collect(Collectors.toList());
         List<Individual> offspring = new ArrayList<>();
         Integer size = champions.size();
         for (int i = 0; i < size-1; i+=2) {

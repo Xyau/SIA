@@ -6,7 +6,7 @@ import genes.Species;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public abstract class Individual {
+public abstract class Individual implements Comparable{
     Species species;
     Genes genes;
 
@@ -46,5 +46,13 @@ public abstract class Individual {
 
     public String toString(){
         return getSpecies().getName() +": " + getGenes().toString();
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (this == o) return 0;
+        if (o == null || getClass() != o.getClass()) throw new IllegalArgumentException();
+        Individual that = (Individual) o;
+        return Double.compare(that.getFitness(),getFitness());
     }
 }
