@@ -6,9 +6,9 @@ import interfaces.Selector;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class RandomBiasedSquaredSelector extends BaseSelector implements Selector {
+public class RouletteSquaredSelector extends BaseSelector implements Selector {
     private Random random;
-    public RandomBiasedSquaredSelector(Integer selectedIndividuals, Random random) {
+    public RouletteSquaredSelector(Integer selectedIndividuals, Random random) {
         super(selectedIndividuals);
         this.random = random;
     }
@@ -22,12 +22,12 @@ public class RandomBiasedSquaredSelector extends BaseSelector implements Selecto
         Double accumulatedFitness=0D;
         NavigableMap<Double,Individual> map = new TreeMap<>();
         for (Individual individual:candidates){
-            map.put((accumulatedFitness)/totalFitness,individual);
             accumulatedFitness += Math.pow(individual.getFitness(),2);
+            map.put((accumulatedFitness)/totalFitness,individual);
         }
 
         for (int i = 0; i < selectedIndividuals && i < candidates.size(); i++) {
-            champions.add(map.floorEntry(random.nextDouble()).getValue());
+            champions.add(map.ceilingEntry(random.nextDouble()).getValue());
         }
         return champions;
     }

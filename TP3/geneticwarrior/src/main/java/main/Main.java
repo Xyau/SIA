@@ -1,11 +1,8 @@
 package main;
 
-import breeders.TwoPointCrossBreeder;
 import breeders.UniformBreeder;
 import experiment.Experiment;
 import experiment.ExperimentBuilder;
-import genes.Species;
-import individuals.Character;
 import individuals.Individual;
 import javafx.util.Pair;
 import mutators.SimpleMutator;
@@ -23,11 +20,12 @@ public class Main {
 
         System.out.println(startingPop.get(0));
         ExperimentBuilder builder = new ExperimentBuilder();
-        builder.addSelector(new RandomBiasedSquaredSelector(40,random))
+        builder.addSelector(new RouletteSquaredSelector(40,random))
                 .addMutator(new SimpleMutator(0.8d,2d,random))
                 .addBreeder(new UniformBreeder(new Random()))
                 .addMaxGenerations(50)
-                .addStartingPop(startingPop);
+                .addStartingPop(startingPop)
+                .addWorkingPop(20);
 
         Experiment experiment = builder.buildExperiment();
 

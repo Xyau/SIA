@@ -13,6 +13,7 @@ public class ExperimentBuilder {
     private Mutator mutator;
     private Selector selector;
     private Integer maxGenerations;
+    private Integer workingPop;
 
     public Experiment buildExperiment(){
         if(breeder == null || startingPop == null || mutator == null || selector == null ){
@@ -21,7 +22,10 @@ public class ExperimentBuilder {
         if(maxGenerations == null){
             maxGenerations = 10;
         }
-        return new Experiment(breeder,startingPop,mutator,selector,maxGenerations);
+        if(workingPop == null){
+            workingPop = startingPop.size();
+        }
+        return new Experiment(breeder,startingPop,mutator,selector,maxGenerations,workingPop);
     }
 
     public ExperimentBuilder addBreeder(Breeder breeder){
@@ -42,6 +46,11 @@ public class ExperimentBuilder {
     }
     public ExperimentBuilder addMaxGenerations(Integer maxGenerations){
         this.maxGenerations = maxGenerations;
+        return this;
+    }
+
+    public ExperimentBuilder addWorkingPop(Integer workingPop) {
+        this.workingPop = workingPop;
         return this;
     }
 }

@@ -20,18 +20,20 @@ public class Experiment {
     private Mutator mutator;
     private Selector selector;
     private Integer maxGenerations;
+    private Integer workingPop;
 
     private List<Double> averageChampionFitnessThroughTime;
     private List<Double> averageFitnessThroughTime;
     private List<Double> maxChampionFitnessThroughTime;
 
     Experiment( Breeder breeder, List<Individual> startingPop, Mutator mutator,
-            Selector selector, Integer maxGenerations) {
+            Selector selector, Integer maxGenerations, Integer workingPop) {
         this.breeder = breeder;
         this.startingPop = startingPop;
         this.mutator = mutator;
         this.selector = selector;
         this.maxGenerations = maxGenerations;
+        this.workingPop = workingPop;
         averageChampionFitnessThroughTime = new ArrayList<>();
         averageFitnessThroughTime = new ArrayList<>();
         maxChampionFitnessThroughTime = new ArrayList<>();
