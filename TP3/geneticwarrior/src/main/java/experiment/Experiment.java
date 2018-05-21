@@ -11,7 +11,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class Experiment {
@@ -24,7 +23,7 @@ public class Experiment {
 
     private List<Double> averageChampionFitnessThroughTime;
     private List<Double> averageFitnessThroughTime;
-    private List<Double> maxChampioFitnessThroughTime;
+    private List<Double> maxChampionFitnessThroughTime;
 
     Experiment( Breeder breeder, List<Individual> startingPop, Mutator mutator,
             Selector selector, Integer maxGenerations) {
@@ -35,7 +34,7 @@ public class Experiment {
         this.maxGenerations = maxGenerations;
         averageChampionFitnessThroughTime = new ArrayList<>();
         averageFitnessThroughTime = new ArrayList<>();
-        maxChampioFitnessThroughTime = new ArrayList<>();
+        maxChampionFitnessThroughTime = new ArrayList<>();
     }
 
     public List<Pair<String,List<Double>>> run(){
@@ -65,7 +64,7 @@ public class Experiment {
         log.finest("Starting champions: " + startingPop);
         log.info("Final Champions: " + champions);
         List<Pair<String,List<Double>>> timeseries = new ArrayList<>();
-        timeseries.add(new Pair<>("max",maxChampioFitnessThroughTime));
+        timeseries.add(new Pair<>("max", maxChampionFitnessThroughTime));
         timeseries.add(new Pair<>("avg",averageChampionFitnessThroughTime));
         return timeseries;
     }
@@ -81,9 +80,9 @@ public class Experiment {
         Double championsAverage = champions.stream().map(Individual::getFitness).collect(Collectors.averagingDouble(x->x));
         averageChampionFitnessThroughTime.add(championsAverage);
         if(championsMax.isPresent()){
-            maxChampioFitnessThroughTime.add(championsMax.get());
+            maxChampionFitnessThroughTime.add(championsMax.get());
         } else {
-            maxChampioFitnessThroughTime.add(0d);
+            maxChampionFitnessThroughTime.add(0d);
         }
     }
 }

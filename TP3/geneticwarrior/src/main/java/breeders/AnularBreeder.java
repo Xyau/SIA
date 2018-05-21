@@ -12,28 +12,31 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-
-public class SimpleCrossBreeder extends TwoByTwoBreeder{
+public class AnularBreeder extends TwoByTwoBreeder {
     Random random;
 
-    public SimpleCrossBreeder(Random random) {
+    public AnularBreeder(Random random) {
         this.random = random;
     }
 
     protected List<Individual> breed(Individual mother, Individual father){
-        Species species = mother.getSpecies();
-        Integer cross = random.nextInt(species.getGenotypes().size());
-        Integer genotypeNumber=0;
+        List<Genotype> genotypes = mother.getSpecies().getGenotypes();
+        Integer start = random.nextInt(genotypes.size());
+        Integer lenght = random.nextInt(genotypes.size()/2-1)+1;
         List<Individual> individuals = new ArrayList<>();
         List<Phenotype> phenotypesA = new ArrayList<>();
         List<Phenotype> phenotypesB = new ArrayList<>();
-        for (Genotype genotype:species.getGenotypes()){
-            String name = genotype.getName();
+        for (int i = 0; i < genotypes.size(); i++) {
+            String name = genotypes.get(i).getName();
             Phenotype phenotypeMother = mother.getGenes().getPhenotypeByName(name);
             Phenotype phenotypeFather = father.getGenes().getPhenotypeByName(name);
-            phenotypesA.add(genotypeNumber<cross?phenotypeMother:phenotypeFather);
-            phenotypesB.add(genotypeNumber<cross?phenotypeFather:phenotypeMother);
-            genotypeNumber++;
+            if(start+lenght>=genotypes.size()){
+                phenotypesA.add(((start+lenght)%genotypes.size()< i &&  i <= start)?phenotypeFather:phenotypeMother);
+                phenotypesB.add(((start+lenght)%genotypes.size()< i &&  i <= start)?phenotypeMother:phenotypeFather);
+            } else {
+                phenotypesA.add((i > start && i <= start+lenght)?phenotypeFather:phenotypeMother);
+                phenotypesB.add((i > start && i <= start+lenght)?phenotypeMother:phenotypeFather);
+            }
         }
         individuals.add(mother.incubate( new Genes(phenotypesA)));
         individuals.add(mother.incubate( new Genes(phenotypesB)));

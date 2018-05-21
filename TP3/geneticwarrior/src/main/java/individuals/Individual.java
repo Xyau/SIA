@@ -17,9 +17,6 @@ public abstract class Individual implements Comparable{
     //Return a NEW altered version of the individual
     abstract public Individual incubate(Genes alteredGenes);
 
-    //Return a NEW copy of the individual
-    abstract public Individual incubate();
-
     abstract public Double getFitness();
 
     public Species getSpecies(){

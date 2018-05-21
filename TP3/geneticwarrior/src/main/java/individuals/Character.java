@@ -9,24 +9,44 @@ import interfaces.Phenotype;
 import main.BonusType;
 import main.ItemType;
 import utils.TSVReader;
-import utils.Utils;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.function.BiFunction;
 
-public class Warrior extends Individual {
-    Double fitness;
+public class Character extends Individual {
+    final Double fitness;
 
-    public Warrior(Species species,Random random) {
-        this.species = species;
-        this.genes = species.getRandomGenes(random);
+    final Double strenghtBonus;
+    final Double agilityBonus;
+    final Double wisdomBonus;
+    final Double resistanceBonus;
+    final Double healthBonus;
+
+    final String name;
+
+    final BiFunction<Double,Double,Double> finalFitness;
+
+    public Character(Species species, Random random,String name, Double strenghtBonus, Double agilityBonus,
+                     Double wisdomBonus, Double resistanceBonus, Double healthBonus,
+                     BiFunction<Double, Double, Double> finalFitness) {
+        this(species,species.getRandomGenes(random),name,strenghtBonus,agilityBonus,wisdomBonus,resistanceBonus,healthBonus,finalFitness);
     }
 
-    public Warrior(Species species, Genes genes) {
-        this.species = species;
+    public Character(Species species, Genes genes, String name, Double strenghtBonus, Double agilityBonus,
+                     Double wisdomBonus, Double resistanceBonus, Double healthBonus,
+                     BiFunction<Double, Double, Double> finalFitness) {
         this.genes = genes;
+        this.species = species;
+        this.strenghtBonus = strenghtBonus;
+        this.agilityBonus = agilityBonus;
+        this.wisdomBonus = wisdomBonus;
+        this.resistanceBonus = resistanceBonus;
+        this.healthBonus = healthBonus;
+        this.name = name;
+        this.finalFitness = finalFitness;
+        fitness = getFitness();
     }
 
     public static Species generateSpecies(){
@@ -37,26 +57,13 @@ public class Warrior extends Individual {
         genotypes.add(new ItemGenotype(ItemType.BOOTS,TSVReader.parseFile(ItemType.BOOTS)));
         genotypes.add(new ItemGenotype(ItemType.WEAPON,TSVReader.parseFile(ItemType.WEAPON)));
         genotypes.add(new IntegerGenotype(13,20,"height"));
-        Species species = new Species("Warrior",genotypes);
+        Species species = new Species("Character",genotypes);
         return species;
-    }
-
-    public static List<Individual> generateIndividuals(Species species,Integer amount,Random random) {
-        List<Individual> pop = new ArrayList<>();
-        for (int i = 0; i < amount; i++) {
-            pop.add(new Warrior(species,species.getRandomGenes(random)));
-        }
-        return pop;
     }
 
     @Override
     public Individual incubate(Genes alteredGenes) {
-        return new Warrior(species,alteredGenes);
-    }
-
-    @Override
-    public Individual incubate() {
-        return new Warrior(species,genes);
+        return new Character(species,alteredGenes,name,strenghtBonus,agilityBonus,wisdomBonus,resistanceBonus,healthBonus,finalFitness);
     }
 
     @Override
@@ -76,11 +83,11 @@ public class Warrior extends Individual {
             health+=phenotype.getValue(BonusType.HEALTH.toString());
         }
 
-        strenght = 100 * Math.tanh(0.01 * strenght);
-        agility = Math.tanh(0.01 * agility);
-        wisdom = 0.6 * Math.tanh(0.01*wisdom);
-        resistance = Math.tanh(0.01*resistance);
-        health = 100 * Math.tanh(0.01 * health);
+        strenght = 100 * Math.tanh(0.01 * strenght * strenghtBonus);
+        agility = Math.tanh(0.01 * agility * agilityBonus);
+        wisdom = 0.6 * Math.tanh(0.01 * wisdom * wisdomBonus);
+        resistance = Math.tanh(0.01 * resistance * resistanceBonus);
+        health = 100 * Math.tanh(0.01 * health * healthBonus);
 
         Double height = genes.getPhenotypeByName("height").getValue("")/10.0;
         Double attackMod = 0.5-Math.pow(3*height-5,4)+Math.pow(3*height-5,2)+height/2;
@@ -89,15 +96,14 @@ public class Warrior extends Individual {
         Double attack = (agility+wisdom)*strenght*attackMod;
         Double defense = (resistance+wisdom)*health*defenseMod;
 
-        fitness = 0.6* attack + 0.4 * defense;
-        return fitness;
+        return finalFitness.apply(attack,defense);
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("[Warrior:");
-        builder.append(getFitness().toString().substring(0,5));
+        builder.append("[").append(name).append(":");
+        builder.append(getFitness().toString(), 0, 5);
         builder.append("]");
         return builder.toString();
     }

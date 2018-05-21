@@ -11,9 +11,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class BitsetIndividual extends Individual {
-    Genes genes;
-    Species species;
-
     public BitsetIndividual(Random random) {
         species = generateSpecies();
         this.genes = species.getRandomGenes(random);
@@ -43,10 +40,4 @@ public class BitsetIndividual extends Individual {
     public Individual incubate(Genes alteredGenes) {
         return new BitsetIndividual(species,alteredGenes);
     }
-
-    @Override
-    public Individual incubate() {
-        return new BitsetIndividual(species,genes);
-    }
-
 }

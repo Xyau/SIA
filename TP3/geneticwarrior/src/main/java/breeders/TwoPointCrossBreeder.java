@@ -12,17 +12,17 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-
-public class SimpleCrossBreeder extends TwoByTwoBreeder{
+public class TwoPointCrossBreeder extends TwoByTwoBreeder {
     Random random;
 
-    public SimpleCrossBreeder(Random random) {
+    public TwoPointCrossBreeder(Random random) {
         this.random = random;
     }
 
     protected List<Individual> breed(Individual mother, Individual father){
         Species species = mother.getSpecies();
-        Integer cross = random.nextInt(species.getGenotypes().size());
+        Integer start = random.nextInt(species.getGenotypes().size());
+        Integer end = random.nextInt(species.getGenotypes().size()-start)+start;
         Integer genotypeNumber=0;
         List<Individual> individuals = new ArrayList<>();
         List<Phenotype> phenotypesA = new ArrayList<>();
@@ -31,8 +31,8 @@ public class SimpleCrossBreeder extends TwoByTwoBreeder{
             String name = genotype.getName();
             Phenotype phenotypeMother = mother.getGenes().getPhenotypeByName(name);
             Phenotype phenotypeFather = father.getGenes().getPhenotypeByName(name);
-            phenotypesA.add(genotypeNumber<cross?phenotypeMother:phenotypeFather);
-            phenotypesB.add(genotypeNumber<cross?phenotypeFather:phenotypeMother);
+            phenotypesA.add((start<genotypeNumber && genotypeNumber<end)?phenotypeFather:phenotypeMother);
+            phenotypesB.add((start<genotypeNumber && genotypeNumber<end)?phenotypeFather:phenotypeMother);
             genotypeNumber++;
         }
         individuals.add(mother.incubate( new Genes(phenotypesA)));

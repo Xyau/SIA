@@ -1,11 +1,12 @@
 package main;
 
-import breeders.SimpleCrossBreeder;
+import breeders.TwoPointCrossBreeder;
+import breeders.UniformBreeder;
 import experiment.Experiment;
 import experiment.ExperimentBuilder;
 import genes.Species;
+import individuals.Character;
 import individuals.Individual;
-import individuals.Warrior;
 import javafx.util.Pair;
 import mutators.SimpleMutator;
 import selectors.*;
@@ -16,15 +17,15 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
         Random random = new Random();
-        Species species = Warrior.generateSpecies();
-        List<Individual> startingPop = Warrior.generateIndividuals(species,10,random);
+        CharacterFactory characterFactory = new CharacterFactory();
+        List<Individual> startingPop = characterFactory.createRandomWarrior(2,random,5);
 
 
         System.out.println(startingPop.get(0));
         ExperimentBuilder builder = new ExperimentBuilder();
-        builder.addSelector(new EliteSelector(40))
+        builder.addSelector(new RandomBiasedSquaredSelector(40,random))
                 .addMutator(new SimpleMutator(0.8d,2d,random))
-                .addBreeder(new SimpleCrossBreeder(new Random()))
+                .addBreeder(new UniformBreeder(new Random()))
                 .addMaxGenerations(50)
                 .addStartingPop(startingPop);
 

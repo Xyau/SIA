@@ -1,8 +1,9 @@
 package breeders;
 
 import genes.Species;
+import individuals.Character;
 import individuals.Individual;
-import individuals.Warrior;
+import main.CharacterFactory;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -12,11 +13,11 @@ import java.util.Random;
 public class WarriorTest {
     @Test
     public void test(){
-        Species species = Warrior.generateSpecies();
+        Species species = Character.generateSpecies();
         List<Individual> startingPop = new ArrayList<>();
         Random random = new Random();
-        startingPop.add(new Warrior(species,random));
-        startingPop.add(new Warrior(species,random));
+        CharacterFactory characterFactory = new CharacterFactory();
+        startingPop.addAll(characterFactory.createRandomWarrior(2,random,3));
 
         System.out.println(species);
     }

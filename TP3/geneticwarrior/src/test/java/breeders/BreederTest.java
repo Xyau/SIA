@@ -3,6 +3,7 @@ package breeders;
 import individuals.BitsetIndividual;
 import interfaces.Breeder;
 import individuals.Individual;
+import main.CharacterFactory;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -18,6 +19,17 @@ public class BreederTest {
         List<Individual> startingPop = new ArrayList<>();
         startingPop.add(new BitsetIndividual(random));
         startingPop.add(new BitsetIndividual(random));
+
+        System.out.println(startingPop);
+        List<Individual> offspring = breeder.breedChampions(startingPop);
+        System.out.println(offspring);
+    }
+    @Test
+    public void CrossoverBreederTest(){
+        Random random = new Random();
+        Breeder breeder = new AnularBreeder(new Random());
+        CharacterFactory characterFactory = new CharacterFactory();
+        List<Individual> startingPop = characterFactory.createRandomAssasin(1,random,2);
 
         System.out.println(startingPop);
         List<Individual> offspring = breeder.breedChampions(startingPop);
