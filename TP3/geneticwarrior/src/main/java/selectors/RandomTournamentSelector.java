@@ -15,13 +15,21 @@ public class RandomTournamentSelector extends BaseSelector implements Selector {
     }
 
     @Override
-    public List<Individual> selectChampions(List<Individual> candidates) {
+    public List<Individual> selectChampions(List<Individual> candidates, Integer generation) {
+        return selectChampions(candidates, selectedIndividuals);
+    }
+
+    @Override
+    public List<Individual> selectChampions(List<Individual> candidates, Integer amount, Integer generation) {
+        if(candidates.size() <= 1) {
+            return candidates;
+        }
         List<Individual> champions = new ArrayList<>();
         Double max=0d;
         Individual best=null;
         Individual contender;
 
-        for (int i = 0; i < selectedIndividuals; i++) {
+        for (int i = 0; i < Math.min(amount,candidates.size()); i++) {
             best = candidates.get(random.nextInt(candidates.size()-1));
             contender = candidates.get(random.nextInt(candidates.size()-1));
             if(best.getFitness()>contender.getFitness()){
@@ -30,7 +38,6 @@ public class RandomTournamentSelector extends BaseSelector implements Selector {
                 champions.add(random.nextDouble()>0.25?contender:best);
             }
         }
-
         return champions;
     }
 }

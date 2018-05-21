@@ -16,14 +16,19 @@ public class EliteSelector extends BaseSelector implements Selector {
     }
 
     @Override
-    public List<Individual> selectChampions(List<Individual> candidates) {
-        if(candidates.size() == 0){
-            return Collections.emptyList();
+    public List<Individual> selectChampions(List<Individual> candidates, Integer generation) {
+        return selectChampions(candidates,selectedIndividuals,generation);
+    }
+
+    @Override
+    public List<Individual> selectChampions(List<Individual> candidates, Integer amount, Integer generation) {
+        if(candidates.size() <= 1){
+            return candidates;
         }
 
         List<Individual> filteredChampions = candidates.stream().distinct().collect(Collectors.toList());
         filteredChampions.sort(Comparator.comparingDouble(o->-o.getFitness()));
-        List<Individual> champions = filteredChampions.subList(0,Math.min(selectedIndividuals,filteredChampions.size()));
+        List<Individual> champions = filteredChampions.subList(0,Math.min(amount,filteredChampions.size()));
         return champions;
     }
 }

@@ -14,7 +14,15 @@ public class RouletteSquaredSelector extends BaseSelector implements Selector {
     }
 
     @Override
-    public List<Individual> selectChampions(List<Individual> candidates) {
+    public List<Individual> selectChampions(List<Individual> candidates, Integer generation) {
+        return selectChampions(candidates,selectedIndividuals, generation);
+    }
+
+    @Override
+    public List<Individual> selectChampions(List<Individual> candidates, Integer amount, Integer generation) {
+        if(candidates.size() <= 1) {
+            return candidates;
+        }
         List<Individual> champions = new ArrayList<>();
 
         Double totalFitness = candidates.stream().map(x -> Math.pow(x.getFitness(), 2d))
@@ -26,7 +34,7 @@ public class RouletteSquaredSelector extends BaseSelector implements Selector {
             map.put((accumulatedFitness)/totalFitness,individual);
         }
 
-        for (int i = 0; i < selectedIndividuals && i < candidates.size(); i++) {
+        for (int i = 0; i < Math.min(amount,candidates.size()); i++) {
             champions.add(map.ceilingEntry(random.nextDouble()).getValue());
         }
         return champions;

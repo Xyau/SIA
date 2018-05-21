@@ -25,11 +25,12 @@ public class Main {
                 .addBreeder(new UniformBreeder(new Random()))
                 .addMaxGenerations(50)
                 .addStartingPop(startingPop)
-                .addWorkingPop(20);
+                .addWorkingPop(20)
+                .addName("ex1");
 
         Experiment experiment = builder.buildExperiment();
 
-        List<Pair<String,List<Double>>> timeseries = experiment.run();
+        Map<String,List<Double>> timeseries = experiment.run();
 
         String out = CSVWriter.getTimeSeriesString(timeseries);
         System.out.println(out);

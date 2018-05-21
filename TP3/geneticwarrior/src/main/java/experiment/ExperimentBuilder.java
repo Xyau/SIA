@@ -14,6 +14,7 @@ public class ExperimentBuilder {
     private Selector selector;
     private Integer maxGenerations;
     private Integer workingPop;
+    private String name;
 
     public Experiment buildExperiment(){
         if(breeder == null || startingPop == null || mutator == null || selector == null ){
@@ -25,7 +26,7 @@ public class ExperimentBuilder {
         if(workingPop == null){
             workingPop = startingPop.size();
         }
-        return new Experiment(breeder,startingPop,mutator,selector,maxGenerations,workingPop);
+        return new ExperimentReplacementSimple(breeder,startingPop,mutator,selector,maxGenerations,workingPop,name);
     }
 
     public ExperimentBuilder addBreeder(Breeder breeder){
@@ -51,6 +52,10 @@ public class ExperimentBuilder {
 
     public ExperimentBuilder addWorkingPop(Integer workingPop) {
         this.workingPop = workingPop;
+        return this;
+    }
+    public ExperimentBuilder addName(String name) {
+        this.name = name;
         return this;
     }
 }
