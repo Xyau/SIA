@@ -6,6 +6,7 @@ import interfaces.Mutator;
 import interfaces.Selector;
 
 import java.util.List;
+import java.util.Random;
 
 public class ExperimentBuilder {
     private Breeder breeder;
@@ -16,6 +17,13 @@ public class ExperimentBuilder {
     private Integer workingPop;
     private String name;
 
+    private ExperimentTypes experimentType;
+    private Double untouchedRatio;
+    private Random random;
+
+    private enum ExperimentTypes{
+        SIMPLE, NORMAL, COMPLEX
+    }
     public Experiment buildExperiment(){
         if(breeder == null || startingPop == null || mutator == null || selector == null ){
             throw new IllegalStateException("Missing values to instance experiment.Experiment");
@@ -26,7 +34,15 @@ public class ExperimentBuilder {
         if(workingPop == null){
             workingPop = startingPop.size();
         }
-        return new ExperimentReplacementSimple(breeder,startingPop,mutator,selector,maxGenerations,workingPop,name);
+        switch (experimentType){
+            case SIMPLE:
+                return new ExperimentReplacementSimple(breeder,startingPop,mutator,selector,maxGenerations,workingPop,name);
+            case NORMAL:
+                return new ExperimentReplacementNormal(breeder,startingPop,mutator,selector,maxGenerations,workingPop,name,untouchedRatio,random);
+            case COMPLEX:
+                default:
+                return new ExperimentReplacementComplex(breeder,startingPop,mutator,selector,maxGenerations,workingPop,name,untouchedRatio,random);
+        }
     }
 
     public ExperimentBuilder addBreeder(Breeder breeder){
@@ -56,6 +72,24 @@ public class ExperimentBuilder {
     }
     public ExperimentBuilder addName(String name) {
         this.name = name;
+        return this;
+    }
+    public ExperimentBuilder replacementSimple(){
+        experimentType = ExperimentTypes.SIMPLE;
+        return this;
+    }
+
+    public ExperimentBuilder replacementComplex(Double untouchedRatio, Random random){
+        experimentType = ExperimentTypes.COMPLEX;
+        this.untouchedRatio = untouchedRatio;
+        this.random = random;
+        return this;
+    }
+
+    public ExperimentBuilder replacementNormal(Double untouchedRatio, Random random){
+        experimentType = ExperimentTypes.NORMAL;
+        this.untouchedRatio = untouchedRatio;
+        this.random = random;
         return this;
     }
 }

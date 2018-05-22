@@ -26,7 +26,7 @@ public class Main {
                 .addMaxGenerations(50)
                 .addStartingPop(startingPop)
                 .addWorkingPop(20)
-                .addName("ex1");
+                .addName("ex1").replacementNormal(0.5D,random);
 
         Experiment experiment = builder.buildExperiment();
 

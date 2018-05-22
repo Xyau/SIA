@@ -19,7 +19,7 @@ public class ExperimentReplacementSimple extends Experiment {
         List<Individual> nextGen = new ArrayList<>();
         List<Individual> genParents = new ArrayList<>();
         while (nextGen.size() < workingPop){
-            List<Individual> parents = selector.selectChampions(pop,2);
+            List<Individual> parents = selector.selectChampions(pop,2,genNumber);
             genParents.addAll(parents);
             log.finest("Selected champions: " + parents);
             List<Individual> offspring = breeder.breedChampions(parents);
