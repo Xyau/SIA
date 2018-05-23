@@ -1,0 +1,10 @@
+{
+  "name" : "experiment1",
+  "breeder": "simple",
+  "mutator": "uniform",
+  "selection": "elite",
+  "selectedIndividuals": 10,
+  "replacement": "simple",
+  "maxGenerations": 50,
+  "workingPop": 20
+}
