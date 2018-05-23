@@ -11,12 +11,16 @@ import java.util.function.BiFunction;
 import java.util.logging.Logger;
 
 public class CharacterFactory {
-    BiFunction<Double, Double, Double> warriorFitness = (attack,defense)->0.6D*attack+0.4D*defense;
-    BiFunction<Double, Double, Double> archerFitness = (attack,defense)->0.9D*attack+0.1D*defense;
-    BiFunction<Double, Double, Double> defenderFitness = (attack,defense)->0.1D*attack+0.9*defense;
-    BiFunction<Double, Double, Double> assasinFitness = (attack,defense)->0.7D*attack+0.3D*defense;
+    private BiFunction<Double, Double, Double> warriorFitness = (attack,defense)->0.6D*attack+0.4D*defense;
+    private BiFunction<Double, Double, Double> archerFitness = (attack,defense)->0.9D*attack+0.1D*defense;
+    private BiFunction<Double, Double, Double> defenderFitness = (attack,defense)->0.1D*attack+0.9*defense;
+    private BiFunction<Double, Double, Double> assasinFitness = (attack,defense)->0.7D*attack+0.3D*defense;
 
-    Species species = Character.generateSpecies();
+    Species species;
+
+    public CharacterFactory() {
+        this.species = Character.generateSpecies();
+    }
 
     public List<Individual> createRandomWarrior(Integer variant, Random random, Integer amount){
         List<Individual> pop = new ArrayList<>();

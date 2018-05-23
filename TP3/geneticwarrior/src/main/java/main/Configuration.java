@@ -19,6 +19,7 @@ import selectors.EliteSelector;
 import selectors.RouletteSelector;
 import selectors.RouletteSquaredSelector;
 import selectors.TournamentSelector;
+import utils.TSVReader;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,10 +46,13 @@ public class Configuration {
         fis.read(data);
         fis.close();
 
+
         String str = new String(data, "UTF-8");
         JsonObject jsonObject = new JsonParser().parse(str).getAsJsonObject();
         Random random = new Random();
         ExperimentBuilder b = new ExperimentBuilder();
+
+        setDataset(jsonObject);
 
         Breeder breeder = getBreeder(jsonObject,random);
         b.addBreeder(breeder);
@@ -58,7 +62,7 @@ public class Configuration {
                 b.addMutator(new NoChangeMutator());
                 break;
             case "notuniform":
-                double mutationRatio = jsonObject.get("mutationRatio").getAsDouble();
+                double mutationRatio = jsonObject.get("chanceToMutate").getAsDouble();
                 double mutationStrenght = jsonObject.get("mutationStrenght").getAsDouble();
                 b.addMutator(new SimpleMutator(mutationRatio, mutationStrenght, random));
                 break;
@@ -138,6 +142,18 @@ public class Configuration {
         String name = jsonObject.get("name").getAsString();
         b.addName(name);
         return b.buildExperiment();
+    }
+
+    private static void setDataset(JsonObject jsonObject){
+        String dataset = jsonObject.get("dataset").getAsString();
+        switch (dataset){
+            case "full":
+                TSVReader.fullData = true;
+                break;
+            case "test":
+            default:
+                TSVReader.fullData = false;
+        }
     }
 
     private static List<Individual> getPopulation(JsonObject jsonObject, Random random){

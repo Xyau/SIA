@@ -17,13 +17,6 @@ import static java.lang.System.exit;
 
 public class Main {
     public static void main(String[] args) {
-        Random random = new Random();
-        CharacterFactory characterFactory = new CharacterFactory();
-        List<Individual> startingPop = characterFactory.createRandomWarrior(2,random,200);
-
-
-        System.out.println(startingPop.get(0));
-        ExperimentBuilder builder = new ExperimentBuilder();
 //        builder.addSelector(new EliteSelector())
 //                .addReplacement(new EliteSelector())
 //                .addMutator(new SimpleMutator(0.8d,2d,random))
