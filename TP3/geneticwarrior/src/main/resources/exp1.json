@@ -1,0 +1,15 @@
+{
+  "name" : "experiment1",
+  "breeder": "uniform",
+  "chanceToBreed": "0.8",
+  "mutator": "uniform",
+  "selection": "squared",
+  "replacement": "elite",
+  "experiment": "complex",
+  "parentAmount": 14,
+  "individuals": 30,
+  "type": "warrior",
+  "variant": 2,
+  "amount": 20,
+  "maxGenerations": 50
+}

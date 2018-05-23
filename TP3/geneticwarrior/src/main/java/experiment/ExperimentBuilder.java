@@ -28,9 +28,6 @@ public class ExperimentBuilder {
         if(breeder == null || startingPop == null || mutator == null || selector == null || replacement == null ){
             throw new IllegalStateException("Missing values to instance experiment.Experiment");
         }
-        if(parentAmount > startingPop.size()){
-            throw new IllegalStateException("too many parents to instance");
-        }
         if(maxGenerations == null){
             maxGenerations = 10;
         }
@@ -38,9 +35,15 @@ public class ExperimentBuilder {
             case SIMPLE:
                 return new ExperimentReplacementSimple(name,breeder,startingPop,mutator,selector,replacement,maxGenerations);
             case NORMAL:
+                if(parentAmount > startingPop.size()){
+                    throw new IllegalStateException("too many parents to instance");
+                }
                 return new ExperimentReplacementNormal(name,breeder,startingPop,mutator,selector,replacement,maxGenerations,parentAmount,random);
+            default:
             case COMPLEX:
-                default:
+                if(parentAmount > startingPop.size()){
+                    throw new IllegalStateException("too many parents to instance");
+                }
                 return new ExperimentReplacementComplex(name,breeder,startingPop,mutator,selector,replacement,maxGenerations,parentAmount,random);
         }
     }

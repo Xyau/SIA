@@ -10,7 +10,10 @@ import selectors.*;
 import utils.CSVWriter;
 import utils.TSVReader;
 
+import java.io.IOException;
 import java.util.*;
+
+import static java.lang.System.exit;
 
 public class Main {
     public static void main(String[] args) {
@@ -21,15 +24,21 @@ public class Main {
 
         System.out.println(startingPop.get(0));
         ExperimentBuilder builder = new ExperimentBuilder();
-        builder.addSelector(new EliteSelector())
-                .addReplacement(new EliteSelector())
-                .addMutator(new SimpleMutator(0.8d,2d,random))
-                .addBreeder(new UniformBreeder(random,0.9f))
-                .addMaxGenerations(50)
-                .addStartingPop(startingPop)
-                .addName("ex1").replacementComplex(4,random);
+//        builder.addSelector(new EliteSelector())
+//                .addReplacement(new EliteSelector())
+//                .addMutator(new SimpleMutator(0.8d,2d,random))
+//                .addBreeder(new UniformBreeder(random,0.9f))
+//                .addMaxGenerations(50)
+//                .addStartingPop(startingPop)
+//                .addName("ex1").replacementComplex(4,random);
 
-        Experiment experiment = builder.buildExperiment();
+        Experiment experiment = null;
+        try {
+            experiment = Configuration.getExperiment(args[0]);
+        } catch (IOException e) {
+            e.printStackTrace();
+            exit(1);
+        }
 
         Map<String,List<Double>> timeseries = experiment.run();
 
