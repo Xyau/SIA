@@ -9,14 +9,8 @@ import java.util.Random;
 
 public class RandomSelector extends BaseSelector implements Selector {
     private Random random;
-    public RandomSelector(Integer selectedIndividuals,Random random) {
-        super(selectedIndividuals);
+    public RandomSelector(Random random) {
         this.random = random;
-    }
-
-    @Override
-    public List<Individual> selectChampions(List<Individual> candidates, Integer generation) {
-        return selectChampions(candidates,selectedIndividuals,generation);
     }
 
     @Override

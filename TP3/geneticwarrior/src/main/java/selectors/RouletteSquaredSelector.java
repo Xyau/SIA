@@ -8,15 +8,10 @@ import java.util.stream.Collectors;
 
 public class RouletteSquaredSelector extends BaseSelector implements Selector {
     private Random random;
-    public RouletteSquaredSelector(Integer selectedIndividuals, Random random) {
-        super(selectedIndividuals);
+    public RouletteSquaredSelector(Random random) {
         this.random = random;
     }
 
-    @Override
-    public List<Individual> selectChampions(List<Individual> candidates, Integer generation) {
-        return selectChampions(candidates,selectedIndividuals, generation);
-    }
 
     @Override
     public List<Individual> selectChampions(List<Individual> candidates, Integer amount, Integer generation) {

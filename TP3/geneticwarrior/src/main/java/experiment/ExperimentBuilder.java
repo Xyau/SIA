@@ -13,35 +13,35 @@ public class ExperimentBuilder {
     private List<Individual> startingPop;
     private Mutator mutator;
     private Selector selector;
+    private Selector replacement;
     private Integer maxGenerations;
-    private Integer workingPop;
     private String name;
 
     private ExperimentTypes experimentType;
-    private Double untouchedRatio;
     private Random random;
+    private Integer parentAmount;
 
     private enum ExperimentTypes{
         SIMPLE, NORMAL, COMPLEX
     }
     public Experiment buildExperiment(){
-        if(breeder == null || startingPop == null || mutator == null || selector == null ){
+        if(breeder == null || startingPop == null || mutator == null || selector == null || replacement == null ){
             throw new IllegalStateException("Missing values to instance experiment.Experiment");
+        }
+        if(parentAmount > startingPop.size()){
+            throw new IllegalStateException("too many parents to instance");
         }
         if(maxGenerations == null){
             maxGenerations = 10;
         }
-        if(workingPop == null){
-            workingPop = startingPop.size();
-        }
         switch (experimentType){
             case SIMPLE:
-                return new ExperimentReplacementSimple(breeder,startingPop,mutator,selector,maxGenerations,workingPop,name);
+                return new ExperimentReplacementSimple(name,breeder,startingPop,mutator,selector,replacement,maxGenerations);
             case NORMAL:
-                return new ExperimentReplacementNormal(breeder,startingPop,mutator,selector,maxGenerations,workingPop,name,untouchedRatio,random);
+                return new ExperimentReplacementNormal(name,breeder,startingPop,mutator,selector,replacement,maxGenerations,parentAmount,random);
             case COMPLEX:
                 default:
-                return new ExperimentReplacementComplex(breeder,startingPop,mutator,selector,maxGenerations,workingPop,name,untouchedRatio,random);
+                return new ExperimentReplacementComplex(name,breeder,startingPop,mutator,selector,replacement,maxGenerations,parentAmount,random);
         }
     }
 
@@ -53,12 +53,17 @@ public class ExperimentBuilder {
         this.selector = selector;
         return this;
     }
+    public ExperimentBuilder addReplacement(Selector replacement){
+        this.replacement = replacement;
+        return this;
+    }
     public ExperimentBuilder addMutator(Mutator mutator){
         this.mutator = mutator;
         return this;
     }
     public ExperimentBuilder addStartingPop(List<Individual> startingPop){
         this.startingPop = startingPop;
+        if(startingPop.size() < 2) throw new IllegalArgumentException("popsize too small");
         return this;
     }
     public ExperimentBuilder addMaxGenerations(Integer maxGenerations){
@@ -66,10 +71,6 @@ public class ExperimentBuilder {
         return this;
     }
 
-    public ExperimentBuilder addWorkingPop(Integer workingPop) {
-        this.workingPop = workingPop;
-        return this;
-    }
     public ExperimentBuilder addName(String name) {
         this.name = name;
         return this;
@@ -79,16 +80,19 @@ public class ExperimentBuilder {
         return this;
     }
 
-    public ExperimentBuilder replacementComplex(Double untouchedRatio, Random random){
+    public ExperimentBuilder replacementComplex(Integer parentAmount, Random random){
         experimentType = ExperimentTypes.COMPLEX;
-        this.untouchedRatio = untouchedRatio;
+        this.parentAmount = parentAmount;
         this.random = random;
         return this;
     }
 
-    public ExperimentBuilder replacementNormal(Double untouchedRatio, Random random){
+    public ExperimentBuilder replacementNormal(Integer parentAmount, Random random){
+        if(parentAmount%2 == 1){
+            parentAmount ++;
+        }
         experimentType = ExperimentTypes.NORMAL;
-        this.untouchedRatio = untouchedRatio;
+        this.parentAmount = parentAmount;
         this.random = random;
         return this;
     }

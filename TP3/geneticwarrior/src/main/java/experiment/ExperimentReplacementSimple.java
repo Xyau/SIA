@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExperimentReplacementSimple extends Experiment {
-    ExperimentReplacementSimple(Breeder breeder, List<Individual> startingPop, Mutator mutator, Selector selector,
-                                Integer maxGenerations, Integer workingPop, String name) {
-        super(breeder, startingPop, mutator, selector, maxGenerations, workingPop, name);
+    ExperimentReplacementSimple(String name, Breeder breeder, List<Individual> startingPop, Mutator mutator, Selector selector,
+                                Selector replacement, Integer maxGenerations) {
+        super(name,breeder, startingPop, mutator, selector, replacement,maxGenerations);
     }
 
     @Override

@@ -8,22 +8,22 @@ import interfaces.Selector;
 import java.util.*;
 
 public class ExperimentReplacementNormal extends Experiment {
-    Double untouched;
+    Integer parentAmount;
     Random random;
-    ExperimentReplacementNormal(Breeder breeder, List<Individual> startingPop, Mutator mutator, Selector selector,
-                                Integer maxGenerations, Integer workingPop, String name, Double untouched, Random random) {
-        super(breeder, startingPop, mutator, selector, maxGenerations, workingPop, name);
+    ExperimentReplacementNormal(String name, Breeder breeder, List<Individual> startingPop, Mutator mutator,
+                                Selector selector, Selector replacement, Integer maxGenerations, Integer parentAmount, Random random) {
+        super(name,breeder,startingPop,mutator,selector,replacement,maxGenerations);
         this.random = random;
-        this.untouched = untouched;
+        this.parentAmount = parentAmount;
     }
 
     @Override
     List<Individual> makeNextGeneration(List<Individual> pop, Integer genNumber) {
-        Integer k = random.nextInt(new Double(Math.ceil(pop.size()*untouched)).intValue());
+        Integer k = parentAmount;
         List<Individual> parents = selector.selectChampions(pop,k,genNumber);
-        List<Individual> nextGen = selector.selectChampions(pop,pop.size()-k,genNumber);
+        List<Individual> nextGen = reeplacement.selectChampions(pop,pop.size()-k,genNumber);
         logAverage(parents,"parentsAvg");
-        logAverage(nextGen,"survAvg");
+        logAverage(nextGen,"replacementAvg");
 
         log.finest("Selected champions: " + parents);
         List<Individual> offspring = breeder.breedChampions(parents);

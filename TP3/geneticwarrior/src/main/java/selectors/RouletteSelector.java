@@ -8,14 +8,8 @@ import java.util.stream.Collectors;
 
 public class RouletteSelector extends BaseSelector implements Selector {
     private Random random;
-    public RouletteSelector(Integer selectedIndividuals, Random random) {
-        super(selectedIndividuals);
+    public RouletteSelector(Random random) {
         this.random = random;
-    }
-
-    @Override
-    public List<Individual> selectChampions(List<Individual> candidates, Integer generation) {
-        return selectChampions(candidates, selectedIndividuals, generation);
     }
 
     @Override

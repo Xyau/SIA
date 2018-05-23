@@ -51,10 +51,10 @@ public class Character extends Individual {
 
     public static Species generateSpecies(){
         List<Genotype> genotypes = new ArrayList<>();
+        genotypes.add(new ItemGenotype(ItemType.BOOTS,TSVReader.parseFile(ItemType.BOOTS)));
         genotypes.add(new ItemGenotype(ItemType.HELMET,TSVReader.parseFile(ItemType.HELMET)));
         genotypes.add(new ItemGenotype(ItemType.ARMOR,TSVReader.parseFile(ItemType.ARMOR)));
         genotypes.add(new ItemGenotype(ItemType.GLOVES,TSVReader.parseFile(ItemType.GLOVES)));
-        genotypes.add(new ItemGenotype(ItemType.BOOTS,TSVReader.parseFile(ItemType.BOOTS)));
         genotypes.add(new ItemGenotype(ItemType.WEAPON,TSVReader.parseFile(ItemType.WEAPON)));
         genotypes.add(new IntegerGenotype(13,20,"height"));
         Species species = new Species("Character",genotypes);

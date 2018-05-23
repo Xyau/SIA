@@ -11,15 +11,6 @@ import java.util.stream.Collectors;
 
 public class EliteSelector extends BaseSelector implements Selector {
 
-    public EliteSelector(Integer selectedIndividuals) {
-        super(selectedIndividuals);
-    }
-
-    @Override
-    public List<Individual> selectChampions(List<Individual> candidates, Integer generation) {
-        return selectChampions(candidates,selectedIndividuals,generation);
-    }
-
     @Override
     public List<Individual> selectChampions(List<Individual> candidates, Integer amount, Integer generation) {
         if(candidates.size() <= 1){

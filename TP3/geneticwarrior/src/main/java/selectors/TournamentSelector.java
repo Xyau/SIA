@@ -10,15 +10,9 @@ public class TournamentSelector extends BaseSelector implements Selector {
     private Random random;
     private Integer tourneySize;
 
-    public TournamentSelector(Integer selectedIndividuals, Integer tourneySize, Random random) {
-        super(selectedIndividuals);
+    public TournamentSelector(Integer tourneySize, Random random) {
         this.tourneySize = tourneySize;
         this.random = random;
-    }
-
-    @Override
-    public List<Individual> selectChampions(List<Individual> candidates, Integer generation) {
-        return selectChampions(candidates, selectedIndividuals, generation);
     }
 
     @Override

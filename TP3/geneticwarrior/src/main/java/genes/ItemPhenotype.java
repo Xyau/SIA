@@ -7,28 +7,26 @@ import main.ItemType;
 import java.util.Map;
 
 public class ItemPhenotype implements Phenotype {
-    private String  name;
     private ItemType itemType;
-    Map<BonusType,Double> bonusMap;
+    Map<BonusType,Float> bonusMap;
 
-    public ItemPhenotype(String name, ItemType itemType, Map<BonusType, Double> bonusMap) {
-        this.name = name;
+    public ItemPhenotype(String name, ItemType itemType, Map<BonusType, Float> bonusMap) {
         this.itemType = itemType;
         this.bonusMap = bonusMap;
     }
 
     @Override
     public String getName() {
-        return name;
+        return itemType.toString();
     }
 
     @Override
-    public Double getValue(String key) {
+    public Float getValue(String key) {
         return bonusMap.get(BonusType.fromString(key));
     }
 
     @Override
     public String toString() {
-        return name;
+        return itemType.toString();
     }
 }

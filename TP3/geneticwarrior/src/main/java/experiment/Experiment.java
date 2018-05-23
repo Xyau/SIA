@@ -4,7 +4,6 @@ import interfaces.Breeder;
 import individuals.Individual;
 import interfaces.Mutator;
 import interfaces.Selector;
-import javafx.util.Pair;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -18,28 +17,23 @@ abstract public class Experiment {
     Breeder breeder;
     Mutator mutator;
     Selector selector;
+    Selector reeplacement;
     Integer workingPop;
 
     Map<String, List<Double>> timeseries;
 
     private String name;
-    private List<Double> averageChampionFitnessThroughTime;
-    private List<Double> averageFitnessThroughTime;
-    private List<Double> maxChampionFitnessThroughTime;
 
-    Experiment( Breeder breeder, List<Individual> startingPop, Mutator mutator,
-            Selector selector, Integer maxGenerations, Integer workingPop, String name) {
+    Experiment( String name, Breeder breeder, List<Individual> startingPop, Mutator mutator,
+            Selector selector, Selector replacement, Integer maxGenerations) {
         this.breeder = breeder;
         this.startingPop = startingPop;
         this.mutator = mutator;
         this.selector = selector;
+        this.reeplacement = replacement;
         this.maxGenerations = maxGenerations;
-        this.workingPop = workingPop;
         this.name = name;
         timeseries = new HashMap<>();
-        averageChampionFitnessThroughTime = new ArrayList<>();
-        averageFitnessThroughTime = new ArrayList<>();
-        maxChampionFitnessThroughTime = new ArrayList<>();
     }
 
     public Map<String, List<Double>> run(){
@@ -48,10 +42,11 @@ abstract public class Experiment {
         pop.addAll(startingPop);
         log.info("Starting pop:" + startingPop);
         List<Individual> nextGen=new ArrayList<>();
-        logAverage(startingPop,"average");
+        nextGen.addAll(startingPop);
         for (int i = 0; i < maxGenerations; i++) {
-            nextGen = makeNextGeneration(pop,i);
             logAverage(nextGen,"average");
+            logMax(nextGen,"max");
+            nextGen = makeNextGeneration(pop,i);
         }
         log.finest("Starting champions: " + startingPop);
         log.info("Final Champions: " + nextGen);
@@ -63,6 +58,11 @@ abstract public class Experiment {
     void logAverage(List<Individual> individuals, String seriesName){
          Double average = individuals.stream().map(Individual::getFitness).collect(Collectors.averagingDouble(x->x));
          addEntryToTimeseries(seriesName,average);
+    }
+
+    void logMax(List<Individual> individuals, String seriesName){
+         Double max = individuals.stream().map(Individual::getFitness).max(Comparator.comparingDouble(x->x)).get();
+         addEntryToTimeseries(seriesName,max);
     }
 
     void addEntryToTimeseries(String timeseriesName, Double value){

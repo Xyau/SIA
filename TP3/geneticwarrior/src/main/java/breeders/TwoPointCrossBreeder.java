@@ -13,10 +13,8 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class TwoPointCrossBreeder extends TwoByTwoBreeder {
-    Random random;
-
-    public TwoPointCrossBreeder(Random random) {
-        this.random = random;
+    public TwoPointCrossBreeder(Random random, Float chanceToBreed) {
+        super(random,chanceToBreed);
     }
 
     protected List<Individual> breed(Individual mother, Individual father){

@@ -10,21 +10,20 @@ import java.util.List;
 import java.util.Random;
 
 public class ExperimentReplacementComplex extends Experiment {
-    Double untouched;
     Random random;
-    ExperimentReplacementComplex(Breeder breeder, List<Individual> startingPop, Mutator mutator, Selector selector,
-                                 Integer maxGenerations, Integer workingPop, String name, Double untouched, Random random) {
-        super(breeder, startingPop, mutator, selector, maxGenerations, workingPop, name);
+    Integer parentAmount;
+    ExperimentReplacementComplex(String name,Breeder breeder, List<Individual> startingPop, Mutator mutator, Selector selector,
+                                 Selector replacement, Integer maxGenerations, Integer parentAmount, Random random) {
+        super(name,breeder,startingPop,mutator,selector,replacement,maxGenerations);
+        this.parentAmount = parentAmount;
         this.random = random;
-        this.untouched = untouched;
     }
 
     @Override
     List<Individual> makeNextGeneration(List<Individual> pop, Integer genNumber) {
-        Integer k = random.nextInt(new Double(Math.ceil(pop.size()*untouched)).intValue());
+        Integer k = parentAmount;
         List<Individual> parents = selector.selectChampions(pop,k,genNumber);
-        List<Individual> nextGen = new ArrayList<>();
-        nextGen.addAll(pop);
+        List<Individual> survivors = reeplacement.selectChampions(pop,pop.size()-k,genNumber);
         logAverage(parents,"parentsAvg");
 
         log.finest("Selected champions: " + parents);
@@ -32,10 +31,12 @@ public class ExperimentReplacementComplex extends Experiment {
         log.finest("Champions offspring: " + offspring);
         List<Individual> mutatedOffspring = mutator.mutate(offspring);
         log.finest("Mutated offspring: " + mutatedOffspring);
-        nextGen.addAll(mutatedOffspring);
-        logAverage(mutatedOffspring,"offspringAvg");
-        nextGen = selector.selectChampions(nextGen,workingPop,genNumber);
+        List<Individual> extras = new ArrayList<>();
+        extras.addAll(mutatedOffspring);
+        extras.addAll(pop);
+        extras = reeplacement.selectChampions(extras,k,genNumber);
+        extras.addAll(survivors);
         log.finest("End of gen "+genNumber+": " + pop);
-        return nextGen;
+        return extras;
     }
 }

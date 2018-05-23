@@ -13,10 +13,9 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class AnularBreeder extends TwoByTwoBreeder {
-    Random random;
 
-    public AnularBreeder(Random random) {
-        this.random = random;
+    public AnularBreeder(Random random, Float chanceToBreed){
+        super(random,chanceToBreed);
     }
 
     protected List<Individual> breed(Individual mother, Individual father){

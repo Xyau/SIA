@@ -17,8 +17,8 @@ public class IntegerPhenotype implements Phenotype {
     }
 
     @Override
-    public Double getValue(String key) {
-        return value*1.0;
+    public Float getValue(String key) {
+        return value*1.0f;
     }
 
     @Override

@@ -10,10 +10,8 @@ import java.util.List;
 import java.util.Random;
 
 public class UniformBreeder extends TwoByTwoBreeder {
-    Random random;
-
-    public UniformBreeder(Random random) {
-        this.random = random;
+    public UniformBreeder(Random random, Float chanceToBreed) {
+        super(random,chanceToBreed);
     }
 
     protected List<Individual> breed(Individual mother, Individual father){

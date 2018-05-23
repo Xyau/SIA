@@ -14,10 +14,8 @@ import java.util.stream.Collectors;
 
 
 public class SimpleCrossBreeder extends TwoByTwoBreeder{
-    Random random;
-
-    public SimpleCrossBreeder(Random random) {
-        this.random = random;
+    public SimpleCrossBreeder(Random random, Float chanceToBreed) {
+        super(random,chanceToBreed);
     }
 
     protected List<Individual> breed(Individual mother, Individual father){
