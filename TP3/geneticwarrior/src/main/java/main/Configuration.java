@@ -119,24 +119,34 @@ public class Configuration {
 
     private static Selector getSelector(JsonObject jsonObject, String selectorName, Random random){
         JsonElement jsonElement = jsonObject.get(selectorName);
-        if(jsonElement != null) {
-            switch (jsonElement.getAsString().toLowerCase()) {
-                case "elite":
-                    return new EliteSelector();
-                case "roulette":
-                    return new RouletteSelector(random);
-                case "squared":
-                    return new RouletteSquaredSelector(random);
-                case "universal":
-                case "boltzmann":
-                    break;
-                case "tournament":
-                    Integer tourneySize = jsonObject.get("tourneySize").getAsInt();
-                    return new TournamentSelector(tourneySize, random);
-                case "randomTournament":
-                    return new RandomTournamentSelector(random);
-                case "ranking":
-                    break;
+        if(jsonElement.isJsonObject()){
+            JsonObject nestedObject = jsonElement.getAsJsonObject();
+
+            Selector first = getSelector(nestedObject,"first",random);
+            Selector second = getSelector(nestedObject,"second",random);
+            Double firstPercentage = nestedObject.get("firstPercentage").getAsDouble();
+            Double secondPercentage = nestedObject.get("secondPercentage").getAsDouble();
+            return new HybridSelector(first,second,firstPercentage,secondPercentage);
+        } else {
+            if(jsonElement != null) {
+                switch (jsonElement.getAsString().toLowerCase()) {
+                    case "elite":
+                        return new EliteSelector();
+                    case "roulette":
+                        return new RouletteSelector(random);
+                    case "squared":
+                        return new RouletteSquaredSelector(random);
+                    case "universal":
+                    case "boltzmann":
+                        return new BoltzmannSelector(random);
+                    case "tournament":
+                        Integer tourneySize = jsonObject.get("tourneySize").getAsInt();
+                        return new TournamentSelector(tourneySize, random);
+                    case "randomTournament":
+                        return new RandomTournamentSelector(random);
+                    case "ranking":
+                        return new RankingSelector(random);
+                }
             }
         }
         throw new IllegalStateException("No accepted "+ selectorName + " found");

@@ -8,7 +8,12 @@
   "mutationStrenght": "1",
   "selector": "roulette",
   "tourneySize": 6,
-  "replacement": "elite",
+  "replacement": {
+    "first":"elite",
+    "second":"roulette",
+    "firstPercentage":"0.5",
+    "secondPercentage":"0.5"
+  },
   "type": "warrior",
   "variant": 2,
   "amount": 50,
