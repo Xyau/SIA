@@ -4,12 +4,13 @@ import genes.ItemPhenotype;
 import interfaces.Phenotype;
 import main.BonusType;
 import main.ItemType;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Logger;
 import sun.rmi.runtime.Log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.logging.Logger;
 
 import static java.lang.System.exit;
 
@@ -17,11 +18,15 @@ public class TSVReader {
     public static String pathTest = "./src/main/resources/testdata/";
     public static String pathFull = "./src/main/resources/fulldata/";
     public static Boolean fullData = false;
+    public static Logger logger = Logger.getRootLogger();
+    static {
+        logger.addAppender(new ConsoleAppender());
+    }
 
     public static List<ItemPhenotype> parseFile(ItemType type){
         if(fullData && !new File(pathFull).exists()){
             fullData = false;
-            Logger.getGlobal().warning("No full data exists");
+            logger.warn("No full data exists");
         }
         switch (type){
             case ARMOR:
@@ -39,7 +44,7 @@ public class TSVReader {
     }
 
     public static List<ItemPhenotype> parseFile(String pathfile, ItemType type){
-        Logger.getGlobal().info("Reading "+type);
+        logger.info("Loading " + type + " into memory");
         List<ItemPhenotype> weapons = new LinkedList<>();
         File file = new File(pathfile);
         try {

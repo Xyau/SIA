@@ -11,8 +11,12 @@ public class ExperimentReplacementNormal extends Experiment {
     Integer parentAmount;
     Random random;
     ExperimentReplacementNormal(String name, Breeder breeder, List<Individual> startingPop, Mutator mutator,
-                                Selector selector, Selector replacement, Integer maxGenerations, Integer parentAmount, Random random) {
-        super(name,breeder,startingPop,mutator,selector,replacement,maxGenerations);
+                                Selector selector, Selector replacement, Integer maxGenerations, Double targetFitness,
+                                Integer maxStaleBestFitnessGenerations, Integer maxStaleIndividualsGenerations,
+                                Integer parentAmount, Random random) {
+        super(name, breeder, startingPop, mutator, selector, replacement, maxGenerations, targetFitness,
+                maxStaleBestFitnessGenerations, maxStaleIndividualsGenerations);
+
         this.random = random;
         this.parentAmount = parentAmount;
     }
@@ -25,13 +29,13 @@ public class ExperimentReplacementNormal extends Experiment {
         logAverage(parents,"parentsAvg");
         logAverage(nextGen,"replacementAvg");
 
-        log.finest("Selected champions: " + parents);
+        log.debug("Selected champions: " + parents);
         List<Individual> offspring = breeder.breedChampions(parents);
-        log.finest("Champions offspring: " + offspring);
+        log.debug("Champions offspring: " + offspring);
         List<Individual> mutatedOffspring = mutator.mutate(offspring);
-        log.finest("Mutated offspring: " + mutatedOffspring);
+        log.debug("Mutated offspring: " + mutatedOffspring);
         nextGen.addAll(mutatedOffspring);
-        log.finest("End of gen "+genNumber+": " + pop);
+        log.debug("End of gen "+genNumber+": " + pop);
         return nextGen;
     }
 }

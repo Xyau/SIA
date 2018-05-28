@@ -5,6 +5,7 @@ import breeders.SimpleCrossBreeder;
 import breeders.TwoPointCrossBreeder;
 import breeders.UniformBreeder;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import experiment.Experiment;
@@ -43,108 +44,29 @@ public class Configuration {
         fis.read(data);
         fis.close();
 
-
         String str = new String(data, "UTF-8");
         JsonObject jsonObject = new JsonParser().parse(str).getAsJsonObject();
-        Random random = new Random();
+
         ExperimentBuilder b = new ExperimentBuilder();
 
+        Random random = getRandom(jsonObject);
         setDataset(jsonObject);
 
         Breeder breeder = getBreeder(jsonObject,random);
         b.addBreeder(breeder);
 
-        switch (jsonObject.get("mutator").getAsString().toLowerCase()){
-            case "uniform":
-                b.addMutator(new NoChangeMutator());
-                break;
-            case "notuniform":
-                double mutationRatio = jsonObject.get("chanceToMutate").getAsDouble();
-                double mutationStrenght = jsonObject.get("mutationStrenght").getAsDouble();
-                b.addMutator(new SimpleMutator(mutationRatio, mutationStrenght, random));
-                break;
-            default:
-                throw new IllegalStateException("No accepted mutator found");
-        }
+        Mutator mutator = getMutator(jsonObject,random);
+        b.addMutator(mutator);
 
-//        if (selectedIndividuals == null){
-//            throw new IllegalStateException("No selected individuals option found");
-//        }
-        switch (jsonObject.get("selection").getAsString().toLowerCase()){
-            case "elite":
-                b.addSelector(new EliteSelector());
-                break;
-            case "roulette":
-                b.addSelector(new RouletteSelector(random));
-                break;
-            case "squared":
-                b.addSelector(new RouletteSquaredSelector(random));
-                break;
-            case "universal":
-            case "boltzmann":
-                b.addSelector(new BoltzmannSelector(random));
-                break;
-            case "tournament":
-                Integer tourneySize = jsonObject.get("tourneySize").getAsInt();
-                b.addSelector(new TournamentSelector(tourneySize, random));
-                break;
-            case "ranking":
-                b.addSelector(new RankingSelector(random));
-                break;
-            case "hybrid" :
-                Double percentage = jsonObject.get("selectionPercentage").getAsDouble();
-                String method1 = jsonObject.get("selectionMethod1").getAsString();
-                String method2 = jsonObject.get("selectionMethod2").getAsString();
-                b.addSelector(new HybridSelector(getSelector(method1, random, jsonObject),getSelector(method2, random, jsonObject),percentage,1 - percentage));
-                break;
-            default:
-                throw new IllegalStateException("No accepted mutator found");
-        }
-        switch (jsonObject.get("replacement").getAsString().toLowerCase()){
-            case "elite":
-                b.addReplacement(new EliteSelector());
-                break;
-            case "roulette":
-                b.addReplacement(new RouletteSelector(random));
-                break;
-            case "universal":
-            case "boltzmann":
-                break;
-            case "tournament":
-                Integer tourneySize = jsonObject.get("tourneySize").getAsInt();
-                b.addReplacement(new TournamentSelector(tourneySize, random));
-                break;
-            case "ranking":
-                break;
-            case "hybrid" :
-                Double percentage = jsonObject.get("replacementPercentage").getAsDouble();
-                String method1 = jsonObject.get("replacementMethod1").getAsString();
-                String method2 = jsonObject.get("replacementMethod2").getAsString();
-                b.addReplacement(new HybridSelector(getSelector(method1, random, jsonObject),getSelector(method2, random, jsonObject),percentage,1 - percentage));
-                break;
-            default:
-                throw new IllegalStateException("No accepted mutator found");
-        }
-        Integer parentAmount ;
-        switch (jsonObject.get("experiment").getAsString().toLowerCase()){
-            case "simple":
-                b.replacementSimple();
-                break;
-            case "complex":
-                parentAmount = jsonObject.get("parentAmount").getAsInt();
-                b.replacementComplex( parentAmount,random);
-                break;
-            case "normal":
-                parentAmount = jsonObject.get("parentAmount").getAsInt();
-                b.replacementNormal(parentAmount, random);
-                break;
-            default:
-                throw new IllegalStateException("No accepted replacement method found");
-        }
+        Selector selector = getSelector(jsonObject,"selector",random);
+        b.addSelector(selector);
 
+        Selector replacement = getSelector(jsonObject,"replacement",random);
+        b.addReplacement(replacement);
 
-        Integer maxGenerations = jsonObject.get("maxGenerations").getAsInt();
-        b.addMaxGenerations(maxGenerations);
+        setCutConditions(jsonObject,b);
+
+        setExperiment(jsonObject,random,b);
 
         List<Individual> startingPop = getPopulation(jsonObject,random);
         System.out.println(startingPop.get(0));
@@ -153,6 +75,108 @@ public class Configuration {
         String name = jsonObject.get("name").getAsString();
         b.addName(name);
         return b.buildExperiment();
+    }
+
+    private static Random getRandom(JsonObject jsonObject) {
+        JsonElement jsonElement = jsonObject.get("seed");
+        if(jsonElement != null){
+            return new Random(jsonElement.getAsInt());
+        }
+        else return new Random();
+    }
+
+    private static void setExperiment(JsonObject jsonObject, Random random, ExperimentBuilder experimentBuilder){
+        JsonElement jsonElement = jsonObject.get("experiment");
+        Integer parentAmount ;
+        switch (jsonElement.getAsString().toLowerCase()){
+            case "simple":
+                experimentBuilder.replacementSimple();
+                return;
+            case "complex":
+                parentAmount = jsonObject.get("parentAmount").getAsInt();
+                experimentBuilder.replacementComplex( parentAmount,random);
+                return;
+            case "normal":
+                parentAmount = jsonObject.get("parentAmount").getAsInt();
+                experimentBuilder.replacementNormal(parentAmount, random);
+                return;
+        }
+        throw new IllegalStateException("No accepted experiment method found");
+    }
+
+    private static Mutator getMutator(JsonObject jsonObject, Random random){
+        JsonElement jsonElement = jsonObject.get("mutator");
+        switch (jsonElement.getAsString().toLowerCase()){
+            case "uniform":
+                return new NoChangeMutator();
+            case "notuniform":
+                double mutationRatio = jsonObject.get("chanceToMutate").getAsDouble();
+                double mutationStrenght = jsonObject.get("mutationStrenght").getAsDouble();
+                return new SimpleMutator(mutationRatio, mutationStrenght, random);
+        }
+        throw new IllegalStateException("No accepted mutator found");
+    }
+
+    private static Selector getSelector(JsonObject jsonObject, String selectorName, Random random){
+        JsonElement jsonElement = jsonObject.get(selectorName);
+        if(jsonElement.isJsonObject()){
+            JsonObject nestedObject = jsonElement.getAsJsonObject();
+
+            Selector first = getSelector(nestedObject,"first",random);
+            Selector second = getSelector(nestedObject,"second",random);
+            Double firstPercentage = nestedObject.get("firstPercentage").getAsDouble();
+            Double secondPercentage = nestedObject.get("secondPercentage").getAsDouble();
+            return new HybridSelector(first,second,firstPercentage,secondPercentage);
+        } else {
+            if(jsonElement != null) {
+                switch (jsonElement.getAsString().toLowerCase()) {
+                    case "elite":
+                        return new EliteSelector();
+                    case "roulette":
+                        return new RouletteSelector(random);
+                    case "squared":
+                        return new RouletteSquaredSelector(random);
+                    case "universal":
+                    case "boltzmann":
+                        return new BoltzmannSelector(random);
+                    case "tournament":
+                        Integer tourneySize = jsonObject.get("tourneySize").getAsInt();
+                        return new TournamentSelector(tourneySize, random);
+                    case "randomTournament":
+                        return new RandomTournamentSelector(random);
+                    case "ranking":
+                        return new RankingSelector(random);
+                }
+            }
+        }
+        throw new IllegalStateException("No accepted "+ selectorName + " found");
+
+    }
+
+    private static void setCutConditions(JsonObject jsonObject, ExperimentBuilder experimentBuilder){
+        JsonElement element = jsonObject.get("targetFitness");
+        if(element != null){
+            Double targetFitness = element.getAsDouble();
+            experimentBuilder.addTargetFitness(targetFitness);
+        }
+
+        element = jsonObject.get("maxStaleBestFitnessGenerations");
+        if(element != null) {
+            Integer maxStaleGenerations = element.getAsInt();
+            experimentBuilder.addmaxStaleBestFitnessGenerations(maxStaleGenerations);
+        }
+
+        element = jsonObject.get("maxStalePopulation");
+        if(element != null){
+            Integer maxStalePopulation = element.getAsInt();
+            experimentBuilder.addMaxStaleIndividuals(maxStalePopulation);
+        }
+
+        element = jsonObject.get("maxGenerations");
+        if(element != null){
+            Integer maxGenerations = element.getAsInt();
+            experimentBuilder.addMaxGenerations(maxGenerations);
+        }
     }
 
     private static void setDataset(JsonObject jsonObject){
@@ -188,7 +212,7 @@ public class Configuration {
             case "defender":
                 pop = characterFactory.createRandomDefender(variant,random,amount);
                 break;
-            case "assassin":
+            case "assasin":
                 pop = characterFactory.createRandomAssasin(variant,random,amount);
                 break;
             default:
@@ -218,35 +242,5 @@ public class Configuration {
         }
         return breeder;
     }
-
-    private static Selector getSelector(String name, Random random, JsonObject jsonObject){
-        Selector selector;
-        switch (name.toLowerCase()){
-            case "elite":
-                selector = new EliteSelector();
-                break;
-            case "roulette":
-                selector = new RouletteSelector(random);
-                break;
-            case "squared":
-                selector = new RouletteSquaredSelector(random);
-                break;
-            case "universal":
-            case "boltzmann":
-                selector = new BoltzmannSelector(random);
-                break;
-            case "tournament":
-                Integer tourneySize = jsonObject.get("tourneySize").getAsInt();
-                selector = new TournamentSelector(tourneySize, random);
-                break;
-            case "ranking":
-                selector = new RankingSelector(random);
-                break;
-            default:
-                throw new IllegalStateException("No accepted mutator found");
-        }
-        return selector;
-    }
-
 
 }

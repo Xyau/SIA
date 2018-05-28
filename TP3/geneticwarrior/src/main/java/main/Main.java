@@ -1,41 +1,43 @@
 package main;
 
-import breeders.UniformBreeder;
 import experiment.Experiment;
-import experiment.ExperimentBuilder;
-import individuals.Individual;
-import javafx.util.Pair;
-import mutators.SimpleMutator;
-import selectors.*;
+import org.apache.log4j.Appender;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.SimpleLayout;
 import utils.CSVWriter;
-import utils.TSVReader;
 
-import java.io.IOException;
-import java.util.*;
+import java.io.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 import static java.lang.System.exit;
 
 public class Main {
+    static Logger logger = Logger.getRootLogger();
+
     public static void main(String[] args) {
-//        builder.addSelector(new EliteSelector())
-//                .addReplacement(new EliteSelector())
-//                .addMutator(new SimpleMutator(0.8d,2d,random))
-//                .addBreeder(new UniformBreeder(random,0.9f))
-//                .addMaxGenerations(50)
-//                .addStartingPop(startingPop)
-//                .addName("ex1").replacementComplex(4,random);
+        Appender  appender = new ConsoleAppender(new SimpleLayout());
+        appender.setName("root");
+        logger.addAppender(appender);
 
         Experiment experiment = null;
-        try {
-            experiment = Configuration.getExperiment(args[0]);
-        } catch (IOException e) {
-            e.printStackTrace();
-            exit(1);
+        Map<String,List<Double>> timeseries = new HashMap<>();
+        for(String path: args){
+            try {
+                experiment = Configuration.getExperiment(path);
+            } catch (IOException e) {
+                e.printStackTrace();
+                exit(1);
+            }
+            timeseries.putAll(experiment.run());
         }
 
-        Map<String,List<Double>> timeseries = experiment.run();
-
         String out = CSVWriter.getTimeSeriesString(timeseries);
+        CSVWriter.writeOutput("out.csv",out);
         System.out.println(out);
     }
+
 }
