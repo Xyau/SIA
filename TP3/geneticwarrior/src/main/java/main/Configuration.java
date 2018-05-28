@@ -92,7 +92,10 @@ public class Configuration {
                 b.addSelector(new RankingSelector(random));
                 break;
             case "hybrid" :
-                b.addSelector(new HybridSelector(new RankingSelector(random),new EliteSelector(),0.7,0.3));
+                Double percentage = jsonObject.get("selectionPercentage").getAsDouble();
+                String method1 = jsonObject.get("selectionMethod1").getAsString();
+                String method2 = jsonObject.get("selectionMethod2").getAsString();
+                b.addSelector(new HybridSelector(getSelector(method1, random, jsonObject),getSelector(method2, random, jsonObject),percentage,1 - percentage));
                 break;
             default:
                 throw new IllegalStateException("No accepted mutator found");
@@ -112,6 +115,12 @@ public class Configuration {
                 b.addReplacement(new TournamentSelector(tourneySize, random));
                 break;
             case "ranking":
+                break;
+            case "hybrid" :
+                Double percentage = jsonObject.get("replacementPercentage").getAsDouble();
+                String method1 = jsonObject.get("replacementMethod1").getAsString();
+                String method2 = jsonObject.get("replacementMethod2").getAsString();
+                b.addReplacement(new HybridSelector(getSelector(method1, random, jsonObject),getSelector(method2, random, jsonObject),percentage,1 - percentage));
                 break;
             default:
                 throw new IllegalStateException("No accepted mutator found");
@@ -179,7 +188,7 @@ public class Configuration {
             case "defender":
                 pop = characterFactory.createRandomDefender(variant,random,amount);
                 break;
-            case "assasin":
+            case "assassin":
                 pop = characterFactory.createRandomAssasin(variant,random,amount);
                 break;
             default:
@@ -209,5 +218,35 @@ public class Configuration {
         }
         return breeder;
     }
+
+    private static Selector getSelector(String name, Random random, JsonObject jsonObject){
+        Selector selector;
+        switch (name.toLowerCase()){
+            case "elite":
+                selector = new EliteSelector();
+                break;
+            case "roulette":
+                selector = new RouletteSelector(random);
+                break;
+            case "squared":
+                selector = new RouletteSquaredSelector(random);
+                break;
+            case "universal":
+            case "boltzmann":
+                selector = new BoltzmannSelector(random);
+                break;
+            case "tournament":
+                Integer tourneySize = jsonObject.get("tourneySize").getAsInt();
+                selector = new TournamentSelector(tourneySize, random);
+                break;
+            case "ranking":
+                selector = new RankingSelector(random);
+                break;
+            default:
+                throw new IllegalStateException("No accepted mutator found");
+        }
+        return selector;
+    }
+
 
 }
