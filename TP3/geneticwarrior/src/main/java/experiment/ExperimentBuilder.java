@@ -6,6 +6,7 @@ import interfaces.Mutator;
 import interfaces.Selector;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 public class ExperimentBuilder {
@@ -14,12 +15,16 @@ public class ExperimentBuilder {
     private Mutator mutator;
     private Selector selector;
     private Selector replacement;
-    private Integer maxGenerations;
     private String name;
 
     private ExperimentTypes experimentType;
     private Random random;
     private Integer parentAmount;
+    private Integer maxGenerations ;
+
+    private Double targetFitness;
+    private Integer maxStaleBestFitnessGenerations;
+    private Integer maxStaleIndividualsGenerations;
 
     private enum ExperimentTypes{
         SIMPLE, NORMAL, COMPLEX
@@ -33,18 +38,23 @@ public class ExperimentBuilder {
         }
         switch (experimentType){
             case SIMPLE:
-                return new ExperimentReplacementSimple(name,breeder,startingPop,mutator,selector,replacement,maxGenerations);
+                return new ExperimentReplacementSimple(name,breeder,startingPop,mutator,selector,replacement,
+                        maxGenerations,targetFitness,maxStaleBestFitnessGenerations,maxStaleIndividualsGenerations);
             case NORMAL:
                 if(parentAmount > startingPop.size()){
                     throw new IllegalStateException("too many parents to instance");
                 }
-                return new ExperimentReplacementNormal(name,breeder,startingPop,mutator,selector,replacement,maxGenerations,parentAmount,random);
+                return new ExperimentReplacementNormal(name,breeder,startingPop,mutator,selector,replacement,
+                        maxGenerations,targetFitness,maxStaleBestFitnessGenerations,maxStaleIndividualsGenerations,
+                        parentAmount,random);
             default:
             case COMPLEX:
                 if(parentAmount > startingPop.size()){
                     throw new IllegalStateException("too many parents to instance");
                 }
-                return new ExperimentReplacementComplex(name,breeder,startingPop,mutator,selector,replacement,maxGenerations,parentAmount,random);
+                return new ExperimentReplacementComplex(name,breeder,startingPop,mutator,selector,replacement,
+                        maxGenerations,targetFitness,maxStaleBestFitnessGenerations,maxStaleIndividualsGenerations,
+                        parentAmount,random);
         }
     }
 
@@ -97,6 +107,21 @@ public class ExperimentBuilder {
         experimentType = ExperimentTypes.NORMAL;
         this.parentAmount = parentAmount;
         this.random = random;
+        return this;
+    }
+
+    public ExperimentBuilder addTargetFitness(Double targetFitness){
+        this.targetFitness = targetFitness;
+        return this;
+    }
+
+    public ExperimentBuilder addmaxStaleBestFitnessGenerations(Integer maxStaleBestFitnessGenerations){
+        this.maxStaleBestFitnessGenerations = maxStaleBestFitnessGenerations;
+        return this;
+    }
+
+    public ExperimentBuilder addMaxStaleIndividuals(Integer maxStaleIndividualsGenerations){
+        this.maxStaleIndividualsGenerations = maxStaleIndividualsGenerations;
         return this;
     }
 }

@@ -19,8 +19,7 @@ public class RandomTournamentSelector extends BaseSelector implements Selector {
             return candidates;
         }
         List<Individual> champions = new ArrayList<>();
-        Double max=0d;
-        Individual best=null;
+        Individual best;
         Individual contender;
 
         for (int i = 0; i < Math.min(amount,candidates.size()); i++) {
