@@ -5,6 +5,7 @@ import experiment.ExperimentBuilder;
 import individuals.Individual;
 import javafx.css.CssMetaData;
 import main.CharacterFactory;
+import mutators.EvolvingMutator;
 import mutators.SimpleMutator;
 import org.apache.log4j.*;
 import org.junit.jupiter.api.Test;
@@ -70,15 +71,15 @@ public class Experiments {
         Logger.getRootLogger().setLevel(Level.INFO);
 
         ExperimentBuilder builder = new ExperimentBuilder();
-        Random random = new Random(124);
-        TSVReader.fullData=true;
+        Random random = new Random(12);
+        TSVReader.fullData=false;
         Map<String,List<Double>> timeseries = new HashMap<>();
         CharacterFactory characterFactory = new CharacterFactory();
         List<Individual> starting = characterFactory.createRandomWarrior(2,random,30);
 
-        builder.addMutator(new SimpleMutator(0.5,1d,random))
-                .addBreeder(new AnularBreeder(random,0.9f))
-                .addReplacement(new EliteSelector())
+        builder.addMutator(new EvolvingMutator(1d,0.2,100,random))
+                .addBreeder(new SimpleCrossBreeder(random,0.9f))
+                .addReplacement(new HybridSelector(new EliteSelector(),new RouletteSelector(random),0.3))
                 .addSelector(new EliteSelector())
                 .addMaxGenerations(150)
                 .replacementNormal(20,random)
@@ -98,7 +99,7 @@ public class Experiments {
         experiments.parallelStream().map(Experiment::run).forEach(timeseries::putAll);
 
         String out = CSVWriter.getTimeSeriesString(timeseries);
-        CSVWriter.writeOutput("experimentComparisons.csv",out);
+        CSVWriter.writeOutput("experimentComparisons2.csv",out);
     }
 }
 

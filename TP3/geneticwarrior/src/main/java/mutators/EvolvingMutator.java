@@ -8,29 +8,22 @@ import interfaces.Phenotype;
 
 import java.util.List;
 import java.util.Random;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class SimpleMutator implements Mutator {
-    private Double mutationRatio;
-    private Double mutationStrenght;
+public class EvolvingMutator implements Mutator {
     private Random random;
+    private Function<Integer,Double> evaluator;
 
-    public SimpleMutator(Double mutationRatio,Double mutationStrenght, Random random) {
-        if(mutationRatio > 1 || mutationRatio < 0) {
-            throw new IllegalArgumentException("Mutation ratio must be between 0 and 1");
-        }
-        if(mutationStrenght < 0) {
-            throw new IllegalArgumentException("mutation strenght must be >0");
-        }
-        this.mutationRatio = mutationRatio;
-        this.mutationStrenght = mutationStrenght;
+    public EvolvingMutator(Double startRatio, Double endRatio, Integer duration, Random random) {
         this.random = random;
+        this.evaluator = (x->startRatio*(1-((x.doubleValue())/duration))+endRatio*(x.doubleValue()/duration));
     }
 
     @Override
-    public List<Individual> mutate(List<Individual> individualsToMutate, Integer genNumber) {
+    public List<Individual> mutate(List<Individual> individualsToMutate,Integer genNumber) {
         return individualsToMutate.stream()
-                .map( individual -> (random.nextDouble() < mutationRatio)?mutate(individual):individual)
+                .map( individual -> (random.nextDouble() < evaluator.apply(genNumber))?mutate(individual):individual)
                 .collect(Collectors.toList());
     }
 
@@ -39,7 +32,7 @@ public class SimpleMutator implements Mutator {
         Species species = individual.getSpecies();
         List<Phenotype> mutatedPhenotypes = species.getGenotypes().stream().map(genotype ->
                 genotype.getMutation(genes.getPhenotypeByName(genotype.getName()),
-                        (random.nextDouble()*2-1)*mutationStrenght))
+                        (random.nextDouble()*2-1)))
                 .collect(Collectors.toList());
         Genes mutatedGenes = new Genes(mutatedPhenotypes);
         return individual.incubate(mutatedGenes);

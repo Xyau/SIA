@@ -14,7 +14,7 @@ import individuals.Individual;
 import interfaces.Breeder;
 import interfaces.Mutator;
 import interfaces.Selector;
-import mutators.NoChangeMutator;
+import mutators.EvolvingMutator;
 import mutators.SimpleMutator;
 import selectors.*;
 import utils.TSVReader;
@@ -22,7 +22,6 @@ import utils.TSVReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -107,8 +106,11 @@ public class Configuration {
     private static Mutator getMutator(JsonObject jsonObject, Random random){
         JsonElement jsonElement = jsonObject.get("mutator");
         switch (jsonElement.getAsString().toLowerCase()){
-            case "uniform":
-                return new NoChangeMutator();
+            case "evolving":
+                double startRatio = jsonObject.get("startRatio").getAsDouble();
+                double endRatio = jsonObject.get("endRatio").getAsDouble();
+                int duration = jsonObject.get("duration").getAsInt();
+                return new EvolvingMutator(startRatio,endRatio,duration,random);
             case "notuniform":
                 double mutationRatio = jsonObject.get("chanceToMutate").getAsDouble();
                 double mutationStrenght = jsonObject.get("mutationStrenght").getAsDouble();
@@ -124,9 +126,8 @@ public class Configuration {
 
             Selector first = getSelector(nestedObject,"first",random);
             Selector second = getSelector(nestedObject,"second",random);
-            Double firstPercentage = nestedObject.get("firstPercentage").getAsDouble();
-            Double secondPercentage = nestedObject.get("secondPercentage").getAsDouble();
-            return new HybridSelector(first,second,firstPercentage,secondPercentage);
+            Double firstToTotalRatio = nestedObject.get("firstToTotalRatio").getAsDouble();
+            return new HybridSelector(first,second,firstToTotalRatio);
         } else {
             if(jsonElement != null) {
                 switch (jsonElement.getAsString().toLowerCase()) {

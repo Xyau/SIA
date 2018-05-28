@@ -1,11 +1,15 @@
 {
   "name" : "roulette",
   "experiment": "complex",
+
   "breeder": "twopoint",
   "chanceToBreed": "0.5",
+
   "mutator": "notuniform",
-  "chanceToMutate": "0.8",
-  "mutationStrenght": "1",
+  "startRatio": 1,
+  "endRatio": 0.3,
+  "duration": 100,
+
   "selector": "roulette",
   "tourneySize": 6,
   "replacement": {

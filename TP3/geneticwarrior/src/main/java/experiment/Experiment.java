@@ -46,10 +46,10 @@ abstract public class Experiment {
     }
 
     public Map<String, List<Double>> run(){
-        log.info("Starting Experiment");
+        log.info("Starting " + name);
         List<Individual> pop = new ArrayList<>();
         pop.addAll(startingPop);
-        log.info("Starting pop:" + startingPop);
+        log.info(name + " starting pop:" + startingPop);
         List<Individual> nextGen=new ArrayList<>();
         nextGen.addAll(startingPop);
         for (int i = 0; !shouldCutSimulation(i); i++) {
@@ -58,10 +58,10 @@ abstract public class Experiment {
             logDifferentGenes(nextGen,"diversity");
             logClones(nextGen,"clones");
             nextGen = makeNextGeneration(pop,i);
-            log.info("Finished gen:" + (i+1));
+            log.info(name + " finished gen:" + (i+1));
         }
-        log.info("Starting champions: " + startingPop);
-        log.info("Final Champions: " + nextGen);
+        log.info(name + "starting champions: " + startingPop);
+        log.info(name + "final Champions: " + nextGen);
         return timeseries;
     }
 

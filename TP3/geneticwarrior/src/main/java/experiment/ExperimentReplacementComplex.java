@@ -33,7 +33,7 @@ public class ExperimentReplacementComplex extends Experiment {
         log.debug("Selected champions: " + parents);
         List<Individual> offspring = breeder.breedChampions(parents);
         log.debug("Champions offspring: " + offspring);
-        List<Individual> mutatedOffspring = mutator.mutate(offspring);
+        List<Individual> mutatedOffspring = mutator.mutate(offspring,genNumber);
         log.debug("Mutated offspring: " + mutatedOffspring);
         List<Individual> extras = new ArrayList<>();
         extras.addAll(mutatedOffspring);
