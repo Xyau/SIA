@@ -15,10 +15,7 @@ import interfaces.Mutator;
 import interfaces.Selector;
 import mutators.NoChangeMutator;
 import mutators.SimpleMutator;
-import selectors.EliteSelector;
-import selectors.RouletteSelector;
-import selectors.RouletteSquaredSelector;
-import selectors.TournamentSelector;
+import selectors.*;
 import utils.TSVReader;
 
 import java.io.File;
@@ -85,12 +82,17 @@ public class Configuration {
                 break;
             case "universal":
             case "boltzmann":
-            break;
+                b.addSelector(new BoltzmannSelector(random));
+                break;
             case "tournament":
                 Integer tourneySize = jsonObject.get("tourneySize").getAsInt();
                 b.addSelector(new TournamentSelector(tourneySize, random));
                 break;
             case "ranking":
+                b.addSelector(new RankingSelector(random));
+                break;
+            case "hybrid" :
+                b.addSelector(new HybridSelector(new RankingSelector(random),new EliteSelector(),0.7,0.3));
                 break;
             default:
                 throw new IllegalStateException("No accepted mutator found");
