@@ -3,6 +3,7 @@ package main;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
@@ -20,15 +21,19 @@ public class NoireChart extends ApplicationFrame {
     private XYSeries minFitness = new XYSeries( "Peor Fitness" );
     private XYSeries avgFitness = new XYSeries( "Avg Fitness" );
 
+    private double min = Double.MAX_VALUE;
+    private double max = Double.MIN_VALUE;
+
     private XYSeriesCollection dataset = new XYSeriesCollection( );
 
+    private JFreeChart xylineChart;
     private XYPlot plot;
     public NoireChart( String applicationTitle, String chartTitle ) {
         super(applicationTitle);
         dataset.addSeries( maxFitness );
         dataset.addSeries( minFitness );
         dataset.addSeries( avgFitness );
-        JFreeChart xylineChart = ChartFactory.createXYLineChart(
+         xylineChart = ChartFactory.createXYLineChart(
                 chartTitle ,
                 "Generación" ,
                 "Fitness" ,
@@ -37,12 +42,22 @@ public class NoireChart extends ApplicationFrame {
                 true , true , false);
 
         ChartPanel chartPanel = new ChartPanel( xylineChart );
-        chartPanel.setPreferredSize( new java.awt.Dimension( 560 , 367 ) );
-        plot = xylineChart.getXYPlot( );
+        chartPanel.setPreferredSize( new java.awt.Dimension( 860 , 567 ) );
 
+        plot = xylineChart.getXYPlot( );
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer( );
-        renderer.setSeriesStroke( 0 , new BasicStroke( 0.001f ) );
+        renderer.setSeriesStroke( 0 , new BasicStroke( 1f ) );
         renderer.setSeriesShape(0, new Rectangle(0,0));
+        renderer.setSeriesPaint( 0 , Color.RED );
+
+        renderer.setSeriesStroke( 1 , new BasicStroke( 1f ) );
+        renderer.setSeriesShape(1, new Rectangle(0,0));
+        renderer.setSeriesPaint( 1 , Color.YELLOW );
+
+        renderer.setSeriesStroke( 2 , new BasicStroke( 1f ) );
+        renderer.setSeriesShape(2, new Rectangle(0,0));
+        renderer.setSeriesPaint( 2 , Color.green );
+
         plot.setRenderer( renderer );
         setContentPane( chartPanel );
     }
@@ -51,6 +66,14 @@ public class NoireChart extends ApplicationFrame {
         maxFitness.add(gen,max);
         minFitness.add(gen,min);
         avgFitness.add(gen,avg);
+        if (max > this.max ){
+            this.max = max;
+        } if (min < this.min ){
+            this.min = min;
+        }
+        xylineChart.getXYPlot().getRangeAxis().setRange(this.min*.95, this.max*1.05);
+
+
     }
 
 
@@ -69,6 +92,7 @@ public class NoireChart extends ApplicationFrame {
                 e.printStackTrace();
             }
             chart.updateChart(i++,2f*i,0.5f*i,1.5f*i);
+
         }
     }
 }
