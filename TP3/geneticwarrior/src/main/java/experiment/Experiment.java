@@ -33,6 +33,8 @@ abstract public class Experiment {
             Selector selector, Selector replacement, Integer maxGenerations, Double targetFitness,
                 Integer maxStaleBestFitnessGenerations, Integer maxStaleIndividualsGenerations) {
         this.breeder = breeder;
+        Collections.sort(startingPop,Comparator.comparingDouble(Individual::getFitness));
+        Collections.reverse(startingPop);
         this.startingPop = startingPop;
         this.mutator = mutator;
         this.selector = selector;
@@ -53,14 +55,16 @@ abstract public class Experiment {
         List<Individual> nextGen=new ArrayList<>();
         nextGen.addAll(startingPop);
         for (int i = 0; !shouldCutSimulation(i); i++) {
+            nextGen = i==0?nextGen:makeNextGeneration(pop,i);
             logAverage(nextGen,"average");
             logMax(nextGen,"max");
             logDifferentGenes(nextGen,"diversity");
             logClones(nextGen,"clones");
-            nextGen = makeNextGeneration(pop,i);
             log.info(name + " finished gen:" + (i+1));
         }
         log.info(name + "starting champions: " + startingPop);
+        Collections.sort(nextGen,Comparator.comparingDouble(Individual::getFitness));
+        Collections.reverse(nextGen);
         log.info(name + "final Champions: " + nextGen);
         return timeseries;
     }

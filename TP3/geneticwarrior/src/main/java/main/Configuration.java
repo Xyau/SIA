@@ -4,7 +4,6 @@ import breeders.AnularBreeder;
 import breeders.SimpleCrossBreeder;
 import breeders.TwoPointCrossBreeder;
 import breeders.UniformBreeder;
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

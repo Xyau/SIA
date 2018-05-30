@@ -71,17 +71,17 @@ public class Experiments {
         Logger.getRootLogger().setLevel(Level.INFO);
 
         ExperimentBuilder builder = new ExperimentBuilder();
-        Random random = new Random(12);
+        Random random = new Random(21);
         TSVReader.fullData=false;
         Map<String,List<Double>> timeseries = new HashMap<>();
         CharacterFactory characterFactory = new CharacterFactory();
-        List<Individual> starting = characterFactory.createRandomWarrior(2,random,30);
+        List<Individual> starting = characterFactory.createRandomWarrior(2,random,20);
 
-        builder.addMutator(new EvolvingMutator(1d,0.2,100,random))
+        builder.addMutator(new EvolvingMutator(1d,0.8,400,random))
                 .addBreeder(new SimpleCrossBreeder(random,0.9f))
                 .addReplacement(new HybridSelector(new EliteSelector(),new RouletteSelector(random),0.3))
-                .addSelector(new EliteSelector())
-                .addMaxGenerations(150)
+                .addSelector(new HybridSelector(new EliteSelector(),new RouletteSelector(random),0.3))
+                .addMaxGenerations(1500)
                 .replacementNormal(20,random)
                 .addName("Normal")
                 .addTargetFitness(47d)
@@ -99,7 +99,7 @@ public class Experiments {
         experiments.parallelStream().map(Experiment::run).forEach(timeseries::putAll);
 
         String out = CSVWriter.getTimeSeriesString(timeseries);
-        CSVWriter.writeOutput("experimentComparisons2.csv",out);
+        CSVWriter.writeOutput("experimentComparisons3.csv",out);
     }
 }
 

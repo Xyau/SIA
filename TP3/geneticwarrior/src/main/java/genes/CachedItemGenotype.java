@@ -3,15 +3,20 @@ package genes;
 import interfaces.Genotype;
 import interfaces.Phenotype;
 import main.ItemType;
+import utils.TSVReader;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.RunnableFuture;
 
-public class ItemGenotype implements Genotype {
+public class CachedItemGenotype implements Genotype {
     private ItemType itemType;
-    private List<ItemPhenotype> phenotypes;
+    private ConcurrentLinkedQueue<ItemPhenotype> phenotypes;
 
-    public ItemGenotype(ItemType itemType, List<ItemPhenotype> phenotypes) {
+    public CachedItemGenotype(ItemType itemType, ConcurrentLinkedQueue<ItemPhenotype> phenotypes) {
         this.itemType = itemType;
         this.phenotypes = phenotypes;
     }
@@ -23,7 +28,10 @@ public class ItemGenotype implements Genotype {
 
     @Override
     public Phenotype getRandomPhenotype(Random random) {
-        return phenotypes.get(random.nextInt(phenotypes.size()-1));
+        if(phenotypes.isEmpty()){
+            TSVReader.parseFileAndRefillQueue(itemType, phenotypes, random);
+        }
+        return phenotypes.poll();
     }
 
     @Override
