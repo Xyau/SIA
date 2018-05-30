@@ -28,7 +28,7 @@ public class SimpleMutator implements Mutator {
     }
 
     @Override
-    public List<Individual> mutate(List<Individual> individualsToMutate) {
+    public List<Individual> mutate(List<Individual> individualsToMutate, Integer genNumber) {
         return individualsToMutate.stream()
                 .map( individual -> (random.nextDouble() < mutationRatio)?mutate(individual):individual)
                 .collect(Collectors.toList());

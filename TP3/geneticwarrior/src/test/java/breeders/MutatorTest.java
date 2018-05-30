@@ -21,7 +21,7 @@ public class MutatorTest {
         startingPop.add(new BitsetIndividual(random));
         System.out.println(startingPop);
 
-        List<Individual> offspring = mutator.mutate(startingPop);
+        List<Individual> offspring = mutator.mutate(startingPop,1);
         System.out.println(offspring);
     }
 }

@@ -1,0 +1,20 @@
+{
+  "name" : "elite",
+  "experiment": "complex",
+  "breeder": "twopoint",
+  "chanceToBreed": "0.5",
+  "mutator": "notuniform",
+  "chanceToMutate": "0.8",
+  "mutationStrenght": "1",
+  "selector": "elite",
+  "tourneySize": 6,
+  "replacement": "elite",
+  "type": "warrior",
+  "variant": 2,
+  "amount": 20,
+  "parentAmount": 14,
+  "dataset":"test",
+  "maxGenerations": 200,
+  "targetFitness": 47,
+  "seed":4221
+}

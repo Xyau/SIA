@@ -2,6 +2,7 @@ package breeders;
 
 import individuals.Individual;
 import interfaces.Breeder;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 public abstract class TwoByTwoBreeder implements Breeder {
     Float chanceToBreed;
     Random random;
+    Logger logger = Logger.getRootLogger();
 
     public TwoByTwoBreeder(Random random, Float chanceToBreed) {
         this.chanceToBreed = chanceToBreed;
@@ -30,8 +32,12 @@ public abstract class TwoByTwoBreeder implements Breeder {
             if(random.nextFloat()>chanceToBreed){
                 offspring.add(champions.get(i));
                 offspring.add(champions.get(i+1));
+                logger.debug("Skipped breeding " + champions.get(i) + " with " + champions.get(i+1));
             } else {
-                offspring.addAll(breed(champions.get(i),champions.get(i+1)));
+                logger.debug("breeding " + champions.get(i) + " with " + champions.get(i+1));
+                Collection<? extends Individual> directOffspring = breed(champions.get(i),champions.get(i+1));
+                offspring.addAll(directOffspring );
+                logger.debug("offspring: " + directOffspring);
             }
         }
         return offspring;
