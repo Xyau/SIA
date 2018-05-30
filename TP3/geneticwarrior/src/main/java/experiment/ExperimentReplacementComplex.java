@@ -43,7 +43,6 @@ public class ExperimentReplacementComplex extends Experiment {
         extras = reeplacement.selectChampions(extras,k,genNumber);
         extras.addAll(survivors);
         log.debug("End of gen "+genNumber+": " + pop);
-        printChart(genNumber,extras);
         return extras;
     }
 

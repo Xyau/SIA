@@ -63,7 +63,9 @@ public class Experiments {
 
         String out = CSVWriter.getTimeSeriesString(timeseries);
         CSVWriter.writeOutput("selectorComparisons.csv",out);
-    }@Test
+    }
+
+    @Test
     public void testExperiments(){
         Appender appender = new ConsoleAppender(new SimpleLayout());
         appender.setName("root");
@@ -72,7 +74,7 @@ public class Experiments {
 
         ExperimentBuilder builder = new ExperimentBuilder();
         Random random = new Random(21);
-        TSVReader.fullData=false;
+        TSVReader.fullData=true;
         Map<String,List<Double>> timeseries = new HashMap<>();
         CharacterFactory characterFactory = new CharacterFactory();
         List<Individual> starting = characterFactory.createRandomWarrior(2,random,20);
@@ -100,6 +102,49 @@ public class Experiments {
 
         String out = CSVWriter.getTimeSeriesString(timeseries);
         CSVWriter.writeOutput("experimentComparisons3.csv",out);
+    }
+
+    @Test
+    public void testBreeders(){
+        Appender appender = new ConsoleAppender(new SimpleLayout());
+        appender.setName("root");
+        Logger.getRootLogger().addAppender(appender);
+        Logger.getRootLogger().setLevel(Level.INFO);
+
+        ExperimentBuilder builder = new ExperimentBuilder();
+        Random random = new Random(21);
+        TSVReader.amount=10000d;
+        TSVReader.fullData=true;
+        Map<String,List<Double>> timeseries = new HashMap<>();
+        CharacterFactory characterFactory = new CharacterFactory();
+        List<Individual> starting = characterFactory.createRandomWarrior(2,random,20);
+
+        builder.addMutator(new EvolvingMutator(1d,0.8,400,random))
+                .addBreeder(new SimpleCrossBreeder(random,0.9f))
+                .addReplacement(new HybridSelector(new EliteSelector(),new RouletteSelector(random),0.3))
+                .addSelector(new HybridSelector(new EliteSelector(),new RouletteSelector(random),0.3))
+                .addMaxGenerations(1500)
+                .replacementComplex(20,random)
+                .addName("SimpleCorss")
+                .addTargetFitness(47d)
+                .addStartingPop(starting);
+
+        List<Experiment> experiments = new ArrayList<>();
+        experiments.add(builder.buildExperiment());
+
+        builder.addName("DoubleCross").addBreeder(new TwoPointCrossBreeder(random,0.9f));
+        experiments.add(builder.buildExperiment());
+
+        builder.addName("Anular").addBreeder(new AnularBreeder(random,0.9f));
+        experiments.add(builder.buildExperiment());
+
+        builder.addName("Uniform").addBreeder(new UniformBreeder(random,0.9f));
+        experiments.add(builder.buildExperiment());
+
+        experiments.parallelStream().map(Experiment::run).forEach(timeseries::putAll);
+
+        String out = CSVWriter.getTimeSeriesString(timeseries);
+        CSVWriter.writeOutput("breederComparisons.csv",out);
     }
 }
 

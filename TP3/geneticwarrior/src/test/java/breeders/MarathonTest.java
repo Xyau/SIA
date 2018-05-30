@@ -31,7 +31,7 @@ public class MarathonTest {
         Map<String,List<Double>> timeseries = new HashMap<>();
         CharacterFactory characterFactory = new CharacterFactory();
         List<Individual> starting = characterFactory.createRandomWarrior(2,random,20);
-        String name = "Cached hybrid";
+        String name = "SimpleCross";
 
         builder.addMutator(new EvolvingMutator(1d,0.8,400,random))
                 .addBreeder(new SimpleCrossBreeder(random,0.9f))

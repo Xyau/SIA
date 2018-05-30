@@ -80,11 +80,11 @@ public class TSVReader {
         return weapons;
     }
 
+    public static Double amount=10000d;
     public static void parseFileAndRefillQueue(ItemType type, ConcurrentLinkedQueue<ItemPhenotype> queue, Random random){
         logger.info("Loading " + type + " into memory");
         List<ItemPhenotype> items = new LinkedList<>();
         File file = new File(getPath(type));
-        Double amount = 20000d;
         Double ratio = amount/1000000.0;
 
         try {
