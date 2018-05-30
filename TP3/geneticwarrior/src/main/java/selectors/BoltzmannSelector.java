@@ -13,7 +13,7 @@ public class BoltzmannSelector implements Selector {
 
     @Override
     public List<Individual> selectChampions(List<Individual> candidates, Integer amount, Integer generation) {
-        Double temperature = 100d - generation*.5;
+        Double temperature = Math.max(0.1,100d * (1 - (1 / (1 + Math.exp(-generation)))));
         if(candidates.size() <= 1) {
             return candidates;
         }
