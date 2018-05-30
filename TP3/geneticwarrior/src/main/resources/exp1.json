@@ -5,7 +5,7 @@
   "breeder": "twopoint",
   "chanceToBreed": "0.5",
 
-  "mutator": "notuniform",
+  "mutator": "evolving",
   "startRatio": 1,
   "endRatio": 0.3,
   "duration": 100,
@@ -15,8 +15,7 @@
   "replacement": {
     "first":"elite",
     "second":"roulette",
-    "firstPercentage":"0.5",
-    "secondPercentage":"0.5"
+    "firstToTotalRatio":"0.3"
   },
   "type": "warrior",
   "variant": 2,
@@ -24,6 +23,5 @@
   "parentAmount": 30,
   "dataset":"test",
   "maxGenerations": 300,
-  "targetFitness": 48,
   "seed":423
 }

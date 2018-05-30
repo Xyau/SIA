@@ -90,6 +90,7 @@ public class TSVReader {
         try {
             Scanner sc = new Scanner(file);
             sc.nextLine();
+            String s="das";
             while (sc.hasNextInt()){
                 if(random.nextFloat()<ratio){
                     int id = sc.nextInt();
@@ -101,19 +102,16 @@ public class TSVReader {
                     bonusMap.put(BonusType.HEALTH, sc.nextFloat());
                     queue.add(new ItemPhenotype(type.toString(), type, bonusMap));
                 } else {
-                    sc.nextInt();
-                    sc.nextFloat();
-                    sc.nextFloat();
-                    sc.nextFloat();
-                    sc.nextFloat();
-                    sc.nextFloat();
+                    s=sc.nextLine();
                 }
             }
             sc.close();
+            s.contains("dsa");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             exit(0);
         }
+
     }
 
 }

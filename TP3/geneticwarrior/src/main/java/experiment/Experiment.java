@@ -113,7 +113,7 @@ abstract public class Experiment {
             return true;
         }
         List<Double> maxes = timeseries.get(name + " max");
-        if((genNumber > 0) && maxes.get(maxes.size()-1)>= targetFitness){
+        if(targetFitness != null && (genNumber > 0) && maxes.get(maxes.size()-1)>= targetFitness){
             log.info("Stopping simulation target fitness has been reached");
             return true;
         }
