@@ -5,7 +5,9 @@ import individuals.Individual;
 import interfaces.Mutator;
 import interfaces.Phenotype;
 import interfaces.Selector;
+import main.NoireChart;
 import org.apache.log4j.Logger;
+import org.jfree.ui.RefineryUtilities;
 
 import javax.print.attribute.DocAttributeSet;
 import java.util.*;
@@ -28,6 +30,7 @@ abstract public class Experiment {
     Map<String, List<Double>> timeseries;
 
     private String name;
+    NoireChart chart;
 
     Experiment( String name, Breeder breeder, List<Individual> startingPop, Mutator mutator,
             Selector selector, Selector replacement, Integer maxGenerations, Double targetFitness,
@@ -43,6 +46,11 @@ abstract public class Experiment {
         this.maxStaleBestFitnessGenerations = maxStaleBestFitnessGenerations;
         this.maxStaleIndividualsGenerations = maxStaleIndividualsGenerations;
         timeseries = new HashMap<>();
+        chart = new NoireChart("Gráfico fitness por generación",
+                "");
+        chart.pack( );
+        RefineryUtilities.centerFrameOnScreen( chart );
+        chart.setVisible( true );
     }
 
     public Map<String, List<Double>> run(){
@@ -154,5 +162,13 @@ abstract public class Experiment {
         } else {
             seriesList.add(value);
         }
+    }
+
+    protected void printChart(Integer genNumber, List<Individual> pop) {
+        Double max = pop.stream().map(Individual::getFitness).max(Comparator.comparingDouble(x->x)).get();
+        Double average = pop.stream().map(Individual::getFitness).collect(Collectors.averagingDouble(x->x));
+        Double min = pop.stream().map(Individual::getFitness).min(Comparator.comparingDouble(x->x)).get();
+        chart.updateChart(genNumber,max,min,average);
+
     }
 }

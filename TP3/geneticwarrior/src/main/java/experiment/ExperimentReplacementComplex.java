@@ -4,8 +4,11 @@ import individuals.Individual;
 import interfaces.Breeder;
 import interfaces.Mutator;
 import interfaces.Selector;
+import main.NoireChart;
+import org.jfree.ui.RefineryUtilities;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -18,7 +21,6 @@ public class ExperimentReplacementComplex extends Experiment {
                                 Integer parentAmount, Random random) {
         super(name, breeder, startingPop, mutator, selector, replacement, maxGenerations, targetFitness,
                 maxStaleBestFitnessGenerations, maxStaleIndividualsGenerations);
-
         this.random = random;
         this.parentAmount = parentAmount;
     }
@@ -41,6 +43,9 @@ public class ExperimentReplacementComplex extends Experiment {
         extras = reeplacement.selectChampions(extras,k,genNumber);
         extras.addAll(survivors);
         log.debug("End of gen "+genNumber+": " + pop);
+        printChart(genNumber,extras);
         return extras;
     }
+
+
 }
