@@ -169,6 +169,5 @@ abstract public class Experiment {
         Double average = pop.stream().map(Individual::getFitness).collect(Collectors.averagingDouble(x->x));
         Double min = pop.stream().map(Individual::getFitness).min(Comparator.comparingDouble(x->x)).get();
         chart.updateChart(genNumber,max,min,average);
-
     }
 }
