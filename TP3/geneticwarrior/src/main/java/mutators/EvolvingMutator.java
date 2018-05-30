@@ -17,7 +17,7 @@ public class EvolvingMutator implements Mutator {
 
     public EvolvingMutator(Double startRatio, Double endRatio, Integer duration, Random random) {
         this.random = random;
-        this.evaluator = (x->startRatio*(1-((x.doubleValue())/duration))+endRatio*(x.doubleValue()/duration));
+        this.evaluator = (generation->startRatio*(1-((generation.doubleValue())/duration))+endRatio*(generation.doubleValue()/duration));
     }
 
     @Override

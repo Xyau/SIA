@@ -2,6 +2,7 @@ package utils;
 
 import genes.ItemPhenotype;
 import interfaces.Phenotype;
+import javafx.util.Pair;
 import main.BonusType;
 import main.ItemType;
 import org.apache.log4j.ConsoleAppender;
@@ -10,7 +11,10 @@ import sun.rmi.runtime.Log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static java.lang.System.exit;
 
@@ -23,24 +27,32 @@ public class TSVReader {
         logger.addAppender(new ConsoleAppender());
     }
 
-    public static List<ItemPhenotype> parseFile(ItemType type){
+    public static String getPath(ItemType type){
         if(fullData && !new File(pathFull).exists()){
             fullData = false;
             logger.warn("No full data exists");
         }
+        String path;
         switch (type){
             case ARMOR:
-                return parseFile((fullData?pathFull:pathTest) + "pecheras.tsv",type);
+                path = (fullData?pathFull:pathTest) + "pecheras.tsv";
+                break;
             case BOOTS:
-                return parseFile((fullData?pathFull:pathTest) + "botas.tsv",type);
+                path = (fullData?pathFull:pathTest) + "botas.tsv";
+                break;
             case WEAPON:
-                return parseFile((fullData?pathFull:pathTest)+ "armas.tsv",type);
+                path = (fullData?pathFull:pathTest) + "armas.tsv";
+                break;
             case GLOVES:
-                return parseFile((fullData?pathFull:pathTest)+ "guantes.tsv",type);
+                path = (fullData?pathFull:pathTest) + "guantes.tsv";
+                break;
             case HELMET:
-                return parseFile((fullData?pathFull:pathTest) + "cascos.tsv",type);
+                path = (fullData?pathFull:pathTest) + "cascos.tsv";
+                break;
+            default:
+                throw new IllegalArgumentException("Inexistant ItemType");
         }
-        throw new IllegalArgumentException("Inexistant ItemType");
+        return path;
     }
 
     public static List<ItemPhenotype> parseFile(String pathfile, ItemType type){
@@ -66,6 +78,42 @@ public class TSVReader {
             exit(0);
         }
         return weapons;
+    }
+
+    public static void parseFileAndRefillQueue(ItemType type, ConcurrentLinkedQueue<ItemPhenotype> queue, Random random){
+        logger.info("Loading " + type + " into memory");
+        List<ItemPhenotype> items = new LinkedList<>();
+        File file = new File(getPath(type));
+        Double amount = 20000d;
+        Double ratio = amount/1000000.0;
+
+        try {
+            Scanner sc = new Scanner(file);
+            sc.nextLine();
+            while (sc.hasNextInt()){
+                if(random.nextFloat()<ratio){
+                    int id = sc.nextInt();
+                    Map<BonusType, Float> bonusMap = new HashMap<>();
+                    bonusMap.put(BonusType.STRENGHT, sc.nextFloat());
+                    bonusMap.put(BonusType.AGILITY, sc.nextFloat());
+                    bonusMap.put(BonusType.WISDOM, sc.nextFloat());
+                    bonusMap.put(BonusType.RESISTANCE, sc.nextFloat());
+                    bonusMap.put(BonusType.HEALTH, sc.nextFloat());
+                    queue.add(new ItemPhenotype(type.toString(), type, bonusMap));
+                } else {
+                    sc.nextInt();
+                    sc.nextFloat();
+                    sc.nextFloat();
+                    sc.nextFloat();
+                    sc.nextFloat();
+                    sc.nextFloat();
+                }
+            }
+            sc.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            exit(0);
+        }
     }
 
 }

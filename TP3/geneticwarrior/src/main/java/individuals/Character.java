@@ -1,9 +1,6 @@
 package individuals;
 
-import genes.Genes;
-import genes.IntegerGenotype;
-import genes.ItemGenotype;
-import genes.Species;
+import genes.*;
 import interfaces.Genotype;
 import interfaces.Phenotype;
 import main.BonusType;
@@ -14,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
@@ -52,8 +50,15 @@ public class Character extends Individual {
     }
 
     public static Species generateSpecies(){
-        List<Genotype> genotypes = Arrays.asList(ItemType.values()).parallelStream().map(
-                item->new ItemGenotype(item,TSVReader.parseFile(item))).collect(Collectors.toList());
+        List<Genotype> genotypes;
+        if(!TSVReader.fullData){
+            genotypes= Arrays.asList(ItemType.values()).parallelStream().map(
+                    item->new ItemGenotype(item,TSVReader.parseFile(TSVReader.getPath(item),item))).collect(Collectors.toList());
+        } else {
+            genotypes = Arrays.asList(ItemType.values()).parallelStream()
+                    .map(itemType -> new CachedItemGenotype(itemType,new ConcurrentLinkedQueue<>())).collect(Collectors.toList());
+        }
+
 //        genotypes.add(new ItemGenotype(ItemType.BOOTS,TSVReader.parseFile(ItemType.BOOTS)));
 //        genotypes.add(new ItemGenotype(ItemType.HELMET,TSVReader.parseFile(ItemType.HELMET)));
 //        genotypes.add(new ItemGenotype(ItemType.ARMOR,TSVReader.parseFile(ItemType.ARMOR)));

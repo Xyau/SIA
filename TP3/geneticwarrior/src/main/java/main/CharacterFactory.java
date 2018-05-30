@@ -16,7 +16,11 @@ public class CharacterFactory {
     private BiFunction<Double, Double, Double> defenderFitness = (attack,defense)->0.1D*attack+0.9*defense;
     private BiFunction<Double, Double, Double> assasinFitness = (attack,defense)->0.7D*attack+0.3D*defense;
 
-    static Species species = Character.generateSpecies();
+    Species species;
+
+    public CharacterFactory(){
+        species = Character.generateSpecies();
+    }
 
     public List<Individual> createRandomWarrior(Integer variant, Random random, Integer amount){
         List<Individual> pop = new ArrayList<>();
