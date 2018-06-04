@@ -4,9 +4,9 @@ import interfaces.Breeder;
 import individuals.Individual;
 import interfaces.Mutator;
 import interfaces.Selector;
+import org.apache.log4j.Logger;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 public class ExperimentBuilder {
@@ -20,6 +20,7 @@ public class ExperimentBuilder {
     private ExperimentTypes experimentType;
     private Random random;
     private Integer parentAmount;
+    private Double parentRatio;
     private Integer maxGenerations ;
 
     private Double targetFitness;
@@ -29,12 +30,27 @@ public class ExperimentBuilder {
     private enum ExperimentTypes{
         SIMPLE, NORMAL, COMPLEX
     }
+
+    private Logger logger = Logger.getRootLogger();
+
     public Experiment buildExperiment(){
         if(breeder == null || startingPop == null || mutator == null || selector == null || replacement == null ){
             throw new IllegalStateException("Missing values to instance experiment.Experiment");
         }
         if(maxGenerations == null){
             maxGenerations = 10;
+        }
+        if(experimentType != ExperimentTypes.SIMPLE) {
+            parentAmount = new Double(parentRatio*startingPop.size()).intValue();
+            if(parentAmount%2 == 1){
+                if(parentAmount >= startingPop.size()){
+                    parentAmount --;
+                } else {
+                    parentAmount ++;
+                }
+            }
+            logger.info("Parent Ratio: " + parentRatio.toString().substring(0,Math.min(parentRatio.toString().length(),3))
+                    +   " translates to Parent Amount: " + parentAmount);
         }
         switch (experimentType){
             case SIMPLE:
@@ -93,19 +109,16 @@ public class ExperimentBuilder {
         return this;
     }
 
-    public ExperimentBuilder replacementComplex(Integer parentAmount, Random random){
+    public ExperimentBuilder replacementComplex(Double parentRatio, Random random){
         experimentType = ExperimentTypes.COMPLEX;
-        this.parentAmount = parentAmount;
+        this.parentRatio = parentRatio;
         this.random = random;
         return this;
     }
 
-    public ExperimentBuilder replacementNormal(Integer parentAmount, Random random){
-        if(parentAmount%2 == 1){
-            parentAmount ++;
-        }
+    public ExperimentBuilder replacementNormal(Double parentRatio, Random random){
         experimentType = ExperimentTypes.NORMAL;
-        this.parentAmount = parentAmount;
+        this.parentRatio = parentRatio;
         this.random = random;
         return this;
     }

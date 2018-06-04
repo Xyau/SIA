@@ -85,18 +85,18 @@ public class Configuration {
 
     private static void setExperiment(JsonObject jsonObject, Random random, ExperimentBuilder experimentBuilder){
         JsonElement jsonElement = jsonObject.get("experiment");
-        Integer parentAmount ;
+        Double parentRatio;
         switch (jsonElement.getAsString().toLowerCase()){
             case "simple":
                 experimentBuilder.replacementSimple();
                 return;
             case "complex":
-                parentAmount = jsonObject.get("parentAmount").getAsInt();
-                experimentBuilder.replacementComplex( parentAmount,random);
+                parentRatio = jsonObject.get("parentRatio").getAsDouble();
+                experimentBuilder.replacementComplex(parentRatio, random);
                 return;
             case "normal":
-                parentAmount = jsonObject.get("parentAmount").getAsInt();
-                experimentBuilder.replacementNormal(parentAmount, random);
+                parentRatio = jsonObject.get("parentRatio").getAsDouble();
+                experimentBuilder.replacementNormal(parentRatio, random);
                 return;
         }
         throw new IllegalStateException("No accepted experiment method found");
@@ -110,7 +110,7 @@ public class Configuration {
                 double endRatio = jsonObject.get("endRatio").getAsDouble();
                 int duration = jsonObject.get("duration").getAsInt();
                 return new EvolvingMutator(startRatio,endRatio,duration,random);
-            case "notuniform":
+            case "uniform":
                 double mutationRatio = jsonObject.get("chanceToMutate").getAsDouble();
                 double mutationStrenght = jsonObject.get("mutationStrenght").getAsDouble();
                 return new SimpleMutator(mutationRatio, mutationStrenght, random);

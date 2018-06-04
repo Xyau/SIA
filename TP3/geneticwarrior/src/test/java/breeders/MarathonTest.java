@@ -41,7 +41,7 @@ public class MarathonTest {
                 .addReplacement(new TournamentSelector(5,random))
                 .addSelector(new TournamentSelector(5,random))
                 .addMaxGenerations(1500)
-                .replacementNormal(40,random)
+                .replacementNormal(0.6,random)
                 .addName(name)
                 .addTargetFitness(48d)
                 .addStartingPop(starting);

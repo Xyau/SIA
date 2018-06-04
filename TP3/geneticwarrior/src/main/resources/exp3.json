@@ -1,20 +1,27 @@
 {
-  "name" : "elite",
+  "name" : "Complex",
   "experiment": "complex",
-  "breeder": "twopoint",
-  "chanceToBreed": "0.5",
-  "mutator": "notuniform",
-  "chanceToMutate": "0.8",
-  "mutationStrenght": "1",
-  "selector": "elite",
-  "tourneySize": 6,
-  "replacement": "elite",
+
+  "breeder": "anular",
+  "chanceToBreed": "0.9",
+
+  "mutator": "evolving",
+  "startRatio": "1",
+  "endRatio": "0.0",
+  "duration": "10000",
+
+  "selector": "roulette",
+  "replacement": {
+    "first":"elite",
+    "second":"roulette",
+    "firstToTotalRatio":"0.2"
+  },
   "type": "warrior",
   "variant": 2,
-  "amount": 50,
-  "parentAmount": 14,
+  "amount": 200,
+  "parentRatio": 0.8,
   "dataset":"full",
   "maxGenerations": 10000,
-  "targetFitness": 48,
-  "seed":600
+  //  "targetFitness": 50,
+  "seed":700
 }

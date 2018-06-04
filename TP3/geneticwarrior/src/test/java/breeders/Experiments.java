@@ -36,7 +36,7 @@ public class Experiments {
                 .addReplacement(new EliteSelector())
                 .addSelector(new EliteSelector())
                 .addMaxGenerations(150)
-                .replacementNormal(20,random)
+                .replacementNormal(0.7,random)
                 .addName("Elite")
                 .addTargetFitness(47d)
                 .addStartingPop(starting);
@@ -84,7 +84,7 @@ public class Experiments {
                 .addReplacement(new HybridSelector(new EliteSelector(),new RouletteSelector(random),0.3))
                 .addSelector(new HybridSelector(new EliteSelector(),new RouletteSelector(random),0.3))
                 .addMaxGenerations(20000)
-                .replacementNormal(40,random)
+                .replacementNormal(0.4,random)
                 .addName("Normal")
                 .addStartingPop(starting);
 
@@ -94,7 +94,7 @@ public class Experiments {
         builder.addName("Simple").replacementSimple();
         experiments.add(builder.buildExperiment());
 
-        builder.addName("Complex").replacementComplex(20,random);
+        builder.addName("Complex").replacementComplex(0.4,random);
         experiments.add(builder.buildExperiment());
 
         experiments.parallelStream().map(Experiment::run).forEach(timeseries::putAll);
@@ -123,7 +123,7 @@ public class Experiments {
                 .addReplacement(new HybridSelector(new EliteSelector(),new RouletteSelector(random),0.3))
                 .addSelector(new HybridSelector(new EliteSelector(),new RouletteSelector(random),0.3))
                 .addMaxGenerations(20000)
-                .replacementComplex(20,random)
+                .replacementComplex(1.0,random)
                 .addName("SimpleCorss")
                 .addStartingPop(starting);
 

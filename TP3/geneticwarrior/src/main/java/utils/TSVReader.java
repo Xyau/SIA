@@ -106,7 +106,6 @@ public class TSVReader {
                 }
             }
             sc.close();
-            s.contains("dsa");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             exit(0);
