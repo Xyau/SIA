@@ -73,20 +73,19 @@ public class Experiments {
         Logger.getRootLogger().setLevel(Level.INFO);
 
         ExperimentBuilder builder = new ExperimentBuilder();
-        Random random = new Random(21);
+        Random random = new Random(221);
         TSVReader.fullData=true;
         Map<String,List<Double>> timeseries = new HashMap<>();
         CharacterFactory characterFactory = new CharacterFactory();
-        List<Individual> starting = characterFactory.createRandomWarrior(2,random,20);
+        List<Individual> starting = characterFactory.createRandomWarrior(2,random,50);
 
-        builder.addMutator(new EvolvingMutator(1d,0.8,400,random))
+        builder.addMutator(new EvolvingMutator(1d,0.2,15000,random))
                 .addBreeder(new SimpleCrossBreeder(random,0.9f))
                 .addReplacement(new HybridSelector(new EliteSelector(),new RouletteSelector(random),0.3))
                 .addSelector(new HybridSelector(new EliteSelector(),new RouletteSelector(random),0.3))
-                .addMaxGenerations(1500)
-                .replacementNormal(20,random)
+                .addMaxGenerations(20000)
+                .replacementNormal(40,random)
                 .addName("Normal")
-                .addTargetFitness(47d)
                 .addStartingPop(starting);
 
         List<Experiment> experiments = new ArrayList<>();
@@ -123,10 +122,9 @@ public class Experiments {
                 .addBreeder(new SimpleCrossBreeder(random,0.9f))
                 .addReplacement(new HybridSelector(new EliteSelector(),new RouletteSelector(random),0.3))
                 .addSelector(new HybridSelector(new EliteSelector(),new RouletteSelector(random),0.3))
-                .addMaxGenerations(1500)
+                .addMaxGenerations(20000)
                 .replacementComplex(20,random)
                 .addName("SimpleCorss")
-                .addTargetFitness(47d)
                 .addStartingPop(starting);
 
         List<Experiment> experiments = new ArrayList<>();

@@ -8,10 +8,9 @@ import org.apache.log4j.SimpleLayout;
 import utils.CSVWriter;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 import static java.lang.System.exit;
 
@@ -24,7 +23,8 @@ public class Main {
         logger.addAppender(appender);
 
         Experiment experiment = null;
-        Map<String,List<Double>> timeseries = new HashMap<>();
+        ConcurrentMap<String,List<Double>> timeseries = new ConcurrentSkipListMap<>();
+        List<Experiment> experiments = new ArrayList<>();
         for(String path: args){
             try {
                 experiment = Configuration.getExperiment(path);
@@ -32,8 +32,11 @@ public class Main {
                 e.printStackTrace();
                 exit(1);
             }
-            timeseries.putAll(experiment.run());
+            experiments.add(experiment);
+//            timeseries.putAll(experiment.run());
         }
+
+        experiments.parallelStream().map(exp->exp.run()).forEach(timeseries::putAll);
 
         String out = CSVWriter.getTimeSeriesString(timeseries);
         CSVWriter.writeOutput("out.csv",out);

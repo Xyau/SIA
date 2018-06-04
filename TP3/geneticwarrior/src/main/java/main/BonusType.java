@@ -1,7 +1,5 @@
 package main;
 
-import java.lang.reflect.WildcardType;
-
 public enum  BonusType {
     STRENGHT, AGILITY, WISDOM, RESISTANCE, HEALTH;
 

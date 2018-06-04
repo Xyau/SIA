@@ -23,32 +23,33 @@ public class MarathonTest {
         Logger.getRootLogger().addAppender(appender);
         Logger.getRootLogger().setLevel(Level.INFO);
 
-        Integer suiteSize = 10;
+        Integer suiteSize = 300;
         ExperimentBuilder builder = new ExperimentBuilder();
         Random charactersRandom = new Random(3);
         Random random = new Random(123);
-        TSVReader.fullData=true;
+        TSVReader.fullData=false;
         Map<String,List<Double>> timeseries = new HashMap<>();
         CharacterFactory characterFactory = new CharacterFactory();
-        List<Individual> starting = characterFactory.createRandomWarrior(2,random,20);
-        String name = "SimpleCross";
+        Integer amount = 50;
+        List<Individual> starting = characterFactory.createRandomWarrior(2,random,amount);
+        String name = "TournamentTournamentFull";
 
         builder.addMutator(new EvolvingMutator(1d,0.8,400,random))
                 .addBreeder(new SimpleCrossBreeder(random,0.9f))
-                .addReplacement(new HybridSelector(new EliteSelector(),new RouletteSelector(random),0.3))
-                .addSelector(new HybridSelector(new EliteSelector(),new RouletteSelector(random),0.3))
-//                .addReplacement(new RouletteSquaredSelector(random))
-//                .addSelector(new RouletteSquaredSelector(random))
-                .addMaxGenerations(500)
-                .replacementNormal(20,random)
+//                .addReplacement(new HybridSelector(new EliteSelector(),new RouletteSelector(random),0.3))
+//                .addSelector(new HybridSelector(new EliteSelector(),new RouletteSelector(random),0.3))
+                .addReplacement(new TournamentSelector(5,random))
+                .addSelector(new TournamentSelector(5,random))
+                .addMaxGenerations(1500)
+                .replacementNormal(40,random)
                 .addName(name)
-                .addTargetFitness(47d)
+                .addTargetFitness(48d)
                 .addStartingPop(starting);
 
         List<Experiment> experiments = new ArrayList<>();
 
         for (int i = 0; i < suiteSize; i++) {
-            builder.addStartingPop(characterFactory.createRandomWarrior(2,charactersRandom,20));
+            builder.addStartingPop(characterFactory.createRandomWarrior(2,charactersRandom,amount));
             builder.addName(name+" "+i);
             experiments.add(builder.buildExperiment());
             Logger.getRootLogger().info("loading "+i);

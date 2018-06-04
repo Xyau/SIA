@@ -14,12 +14,18 @@ import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class NoireChart extends ApplicationFrame {
 
     private XYSeries maxFitness = new XYSeries( "Mejor Fitness" );
     private XYSeries minFitness = new XYSeries( "Peor Fitness" );
     private XYSeries avgFitness = new XYSeries( "Avg Fitness" );
+
+    private Map<String,XYSeries> seriesList = new HashMap<>();
 
     private double min = Double.MAX_VALUE;
     private double max = Double.MIN_VALUE;
@@ -62,7 +68,16 @@ public class NoireChart extends ApplicationFrame {
         setContentPane( chartPanel );
     }
 
-    public void updateChart(int gen,double max,double min,double avg){
+    public void updateChart(int gen, String series, Double value) {
+        seriesList.get(series).add(gen,value);
+        if (value> this.max ){
+            this.max = value;
+        } if (value < this.min ){
+            this.min = min;
+        }
+    }
+
+    public void updateChart(int gen, double max, double min, double avg){
         maxFitness.add(gen,max);
         minFitness.add(gen,min);
         avgFitness.add(gen,avg);
@@ -72,8 +87,6 @@ public class NoireChart extends ApplicationFrame {
             this.min = min;
         }
         xylineChart.getXYPlot().getRangeAxis().setRange(this.min*.95, this.max*1.05);
-
-
     }
 
 
@@ -92,7 +105,6 @@ public class NoireChart extends ApplicationFrame {
                 e.printStackTrace();
             }
             chart.updateChart(i++,2f*i,0.5f*i,1.5f*i);
-
         }
     }
 }

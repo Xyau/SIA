@@ -48,7 +48,7 @@ abstract public class Experiment {
         this.maxStaleBestFitnessGenerations = maxStaleBestFitnessGenerations;
         this.maxStaleIndividualsGenerations = maxStaleIndividualsGenerations;
         timeseries = new HashMap<>();
-        chart = new NoireChart("Gráfico fitness por generación",
+        chart = new NoireChart(name,
                 "");
         chart.pack( );
         RefineryUtilities.centerFrameOnScreen( chart );
@@ -62,14 +62,15 @@ abstract public class Experiment {
         log.info(name + " starting pop:" + startingPop);
         List<Individual> nextGen=new ArrayList<>();
         nextGen.addAll(startingPop);
-        for (int i = 0; !shouldCutSimulation(i); i++) {
-            nextGen = i==0?nextGen:makeNextGeneration(pop,i);
+        for (int i = 0; !shouldCutSimulation(i); ) {
+            nextGen = i==0?nextGen:makeNextGeneration(nextGen,i);
             logAverage(nextGen,"average");
             logMax(nextGen,"max");
             logDifferentGenes(nextGen,"diversity");
             logClones(nextGen,"clones");
             printChart(i,nextGen);
             log.info(name + " finished gen:" + (i+1));
+            i++;
         }
         log.info(name + "starting champions: " + startingPop);
         Collections.sort(nextGen,Comparator.comparingDouble(Individual::getFitness));

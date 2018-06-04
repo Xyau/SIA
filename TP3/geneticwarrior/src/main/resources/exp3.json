@@ -11,10 +11,10 @@
   "replacement": "elite",
   "type": "warrior",
   "variant": 2,
-  "amount": 20,
+  "amount": 50,
   "parentAmount": 14,
-  "dataset":"test",
-  "maxGenerations": 200,
-  "targetFitness": 47,
-  "seed":4221
+  "dataset":"full",
+  "maxGenerations": 10000,
+  "targetFitness": 48,
+  "seed":600
 }

@@ -1,27 +1,27 @@
 {
   "name" : "roulette",
-  "experiment": "complex",
+  "experiment": "normal",
 
   "breeder": "twopoint",
   "chanceToBreed": "0.5",
 
-  "mutator": "evolving",
-  "startRatio": 1,
-  "endRatio": 0.3,
-  "duration": 100,
+  "mutator": "notuniform",
+  "chanceToMutate": "0.2",
+  "mutationStrenght": "1",
 
   "selector": "roulette",
-  "tourneySize": 6,
-  "replacement": {
+  "replacement": "elite",
+  "replacement2": {
     "first":"elite",
     "second":"roulette",
-    "firstToTotalRatio":"0.3"
+    "firstToTotalRatio":"0.02"
   },
   "type": "warrior",
   "variant": 2,
-  "amount": 50,
-  "parentAmount": 30,
-  "dataset":"test",
-  "maxGenerations": 300,
-  "seed":423
+  "amount": 200,
+  "parentAmount": 100,
+  "dataset":"full",
+  "maxGenerations": 10000,
+//  "targetFitness": 50,
+  "seed":600
 }
