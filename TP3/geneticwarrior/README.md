@@ -94,6 +94,7 @@ El archivo de configuración es un JSON. Los objetos que componen a este JSON so
     * "defender": defensor.
     * "asesino": asesino.
 * "variant" (int): número del 1 al 3 que indica que personaje se va a usar.
+* "seed": la semilla para el random.
 
 Condiciones de corte:
 
