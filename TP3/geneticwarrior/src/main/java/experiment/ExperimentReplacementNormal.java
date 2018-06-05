@@ -25,6 +25,7 @@ public class ExperimentReplacementNormal extends Experiment {
     List<Individual> makeNextGeneration(List<Individual> pop, Integer genNumber) {
         Integer k = parentAmount;
         List<Individual> parents = selector.selectChampions(pop,k,genNumber);
+        k = parents.size();
         List<Individual> nextGen = reeplacement.selectChampions(pop,pop.size()-k,genNumber);
         logAverage(parents,"parentsAvg");
         logAverage(nextGen,"replacementAvg");

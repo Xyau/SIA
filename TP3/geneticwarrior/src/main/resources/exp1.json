@@ -6,22 +6,26 @@
   "chanceToBreed": "0.9",
 
   "mutator": "evolving",
-  "startRatio": "1",
+  "startRatio": "1.0",
   "endRatio": "0.3",
   "duration": "10000",
 
-  "selector": "random",
+  "selector": {
+    "first":"elite",
+    "second":"random",
+    "firstToTotalRatio":"0.3"
+  },
   "replacement": {
     "first":"elite",
-    "second":"roulette",
-    "firstToTotalRatio":"0.2"
+    "second":"random",
+    "firstToTotalRatio":"0.15"
   },
   "type": "warrior",
   "variant": 2,
   "amount": 200,
   "parentRatio": 0.8,
   "dataset":"full",
-  "maxGenerations": 10000,
+  "maxGenerations": 20000,
 //  "targetFitness": 50,
   "seed":700
 }
