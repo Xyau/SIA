@@ -142,7 +142,7 @@ public class Configuration {
                     case "tournament":
                         Integer tourneySize = jsonObject.get("tourneySize").getAsInt();
                         return new TournamentSelector(tourneySize, random);
-                    case "randomTournament":
+                    case "randomtournament":
                         return new RandomTournamentSelector(random);
                     case "ranking":
                         return new RankingSelector(random);
