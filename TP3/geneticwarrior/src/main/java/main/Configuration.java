@@ -112,7 +112,7 @@ public class Configuration {
                 return new EvolvingMutator(startRatio,endRatio,duration,random);
             case "uniform":
                 double mutationRatio = jsonObject.get("chanceToMutate").getAsDouble();
-                double mutationStrenght = jsonObject.get("mutationStrenght").getAsDouble();
+                double mutationStrenght = jsonObject.get("mutationStrength").getAsDouble();
                 return new SimpleMutator(mutationRatio, mutationStrenght, random);
         }
         throw new IllegalStateException("No accepted mutator found");
@@ -214,7 +214,7 @@ public class Configuration {
             case "defender":
                 pop = characterFactory.createRandomDefender(variant,random,amount);
                 break;
-            case "assasin":
+            case "assassin":
                 pop = characterFactory.createRandomAssasin(variant,random,amount);
                 break;
             default:
