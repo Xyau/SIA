@@ -1,10 +1,7 @@
 package main;
 
 import experiment.Experiment;
-import org.apache.log4j.Appender;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Logger;
-import org.apache.log4j.SimpleLayout;
+import org.apache.log4j.*;
 import utils.CSVWriter;
 
 import java.io.*;
@@ -21,6 +18,7 @@ public class Main {
         Appender  appender = new ConsoleAppender(new SimpleLayout());
         appender.setName("root");
         logger.addAppender(appender);
+        logger.setLevel(Level.INFO);
 
         Experiment experiment = null;
         ConcurrentMap<String,List<Double>> timeseries = new ConcurrentSkipListMap<>();

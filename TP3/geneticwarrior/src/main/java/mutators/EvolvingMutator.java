@@ -17,9 +17,10 @@ public class EvolvingMutator implements Mutator {
 
     public EvolvingMutator(Double startRatio, Double endRatio, Integer duration, Random random) {
         this.random = random;
-        this.evaluator = (generation->startRatio*(1-((generation.doubleValue())/duration))+endRatio*(generation.doubleValue()/duration));
+        this.evaluator = (generation ->
+                startRatio * (1 - ((Math.max(generation.doubleValue(), duration) / duration)) +
+                        endRatio * (Math.max(generation.doubleValue(), duration) / duration)));
     }
-
     @Override
     public List<Individual> mutate(List<Individual> individualsToMutate,Integer genNumber) {
         return individualsToMutate.stream()

@@ -146,6 +146,8 @@ public class Configuration {
                         return new RandomTournamentSelector(random);
                     case "ranking":
                         return new RankingSelector(random);
+                    case "random":
+                        return new RandomSelector(random);
                 }
             }
         }

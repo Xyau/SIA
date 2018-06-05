@@ -1,16 +1,16 @@
 {
   "name" : "Simple",
-  "experiment": "simple",
+  "experiment": "normal",
 
   "breeder": "anular",
   "chanceToBreed": "0.9",
 
   "mutator": "evolving",
   "startRatio": "1",
-  "endRatio": "0.0",
+  "endRatio": "0.3",
   "duration": "10000",
 
-  "selector": "roulette",
+  "selector": "random",
   "replacement": {
     "first":"elite",
     "second":"roulette",
