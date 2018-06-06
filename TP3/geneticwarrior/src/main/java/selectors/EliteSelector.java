@@ -17,7 +17,7 @@ public class EliteSelector extends BaseSelector implements Selector {
             return candidates;
         }
 
-        List<Individual> filteredChampions = candidates.stream().distinct().collect(Collectors.toList());
+        List<Individual> filteredChampions = new ArrayList<>(candidates);
         filteredChampions.sort(Comparator.comparingDouble(o->-o.getFitness()));
         List<Individual> champions = filteredChampions.subList(0,Math.min(amount,filteredChampions.size()));
         return champions;

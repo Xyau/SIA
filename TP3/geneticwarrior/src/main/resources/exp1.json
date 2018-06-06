@@ -1,18 +1,18 @@
 {
   "name" : "Simple",
-  "experiment": "normal",
+  "experiment": "complex",
 
   "breeder": "anular",
   "chanceToBreed": "0.9",
 
   "mutator": "evolving",
   "startRatio": "1.0",
-  "endRatio": "0.3",
+  "endRatio": "0.1",
   "duration": "10000",
 
   "selector": {
     "first":"elite",
-    "second":"random",
+    "second":"squared",
     "firstToTotalRatio":"0.3"
   },
   "replacement": {
