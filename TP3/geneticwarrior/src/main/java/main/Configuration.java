@@ -137,6 +137,7 @@ public class Configuration {
                     case "squared":
                         return new RouletteSquaredSelector(random);
                     case "universal":
+                        return new UniversalSelector(random);
                     case "boltzmann":
                         Double initTemp = jsonObject.get("initTemp").getAsDouble();
                         return new BoltzmannSelector(random,initTemp);
