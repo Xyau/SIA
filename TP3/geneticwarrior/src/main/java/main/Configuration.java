@@ -138,7 +138,8 @@ public class Configuration {
                         return new RouletteSquaredSelector(random);
                     case "universal":
                     case "boltzmann":
-                        return new BoltzmannSelector(random);
+                        Double initTemp = jsonObject.get("initTemp").getAsDouble();
+                        return new BoltzmannSelector(random,initTemp);
                     case "tournament":
                         Integer tourneySize = jsonObject.get("tourneySize").getAsInt();
                         return new TournamentSelector(tourneySize, random);

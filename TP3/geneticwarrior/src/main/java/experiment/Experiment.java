@@ -5,6 +5,7 @@ import individuals.Individual;
 import interfaces.Mutator;
 import interfaces.Phenotype;
 import interfaces.Selector;
+import main.ItemType;
 import main.NoireChart;
 import org.apache.log4j.Logger;
 import org.jfree.ui.RefineryUtilities;
@@ -27,6 +28,7 @@ abstract public class Experiment {
     private Integer maxStaleBestFitnessGenerations;
     private Integer maxStaleIndividualsGenerations;
 
+    private Individual maxInd;
     Map<String, List<Double>> timeseries;
 
     private String name;
@@ -76,6 +78,9 @@ abstract public class Experiment {
         Collections.sort(nextGen,Comparator.comparingDouble(Individual::getFitness));
         Collections.reverse(nextGen);
         log.info(name + "final Champions: " + nextGen);
+        log.info("Best config: " + maxInd);
+        maxInd.getGenes().getAllPhenotypes().stream().forEach(phenotype -> log.info(phenotype));
+
         return timeseries;
     }
 
@@ -87,8 +92,9 @@ abstract public class Experiment {
     }
 
     void logMax(List<Individual> individuals, String seriesName){
-         Double max = individuals.stream().map(Individual::getFitness).max(Comparator.comparingDouble(x->x)).get();
-         addEntryToTimeseries(seriesName,max);
+         Individual ind = individuals.stream().max(Comparator.comparingDouble(Individual::getFitness)).get();
+         maxInd = (maxInd==null||(ind.getFitness()>maxInd.getFitness()))?ind:maxInd;
+         addEntryToTimeseries(seriesName,ind.getFitness());
     }
 
     void logDifferentGenes(List<Individual> individuals, String seriesName){

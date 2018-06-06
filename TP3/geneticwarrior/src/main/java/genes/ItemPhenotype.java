@@ -29,7 +29,7 @@ public class ItemPhenotype implements Phenotype {
 
     @Override
     public String toString() {
-        return itemType.toString();
+        return itemType.toString()+bonusMap.toString();
     }
 
     @Override

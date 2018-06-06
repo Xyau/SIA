@@ -38,7 +38,7 @@ public class Main {
 
         String out = CSVWriter.getTimeSeriesString(timeseries);
         CSVWriter.writeOutput("out.csv",out);
-        System.out.println(out);
+//        System.out.println(out);
     }
 
 }
