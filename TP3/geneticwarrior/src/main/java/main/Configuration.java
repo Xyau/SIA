@@ -137,6 +137,7 @@ public class Configuration {
                     case "squared":
                         return new RouletteSquaredSelector(random);
                     case "universal":
+                        return new UniversalSelector(random);
                     case "boltzmann":
                         return new BoltzmannSelector(random);
                     case "tournament":
