@@ -143,7 +143,7 @@ public class Configuration {
                     case "tournament":
                         Integer tourneySize = jsonObject.get("tourneySize").getAsInt();
                         return new TournamentSelector(tourneySize, random);
-                    case "randomTournament":
+                    case "randomtournament":
                         return new RandomTournamentSelector(random);
                     case "ranking":
                         return new RankingSelector(random);
@@ -195,7 +195,7 @@ public class Configuration {
     }
 
     private static List<Individual> getPopulation(JsonObject jsonObject, Random random){
-        CharacterFactory characterFactory = new CharacterFactory();
+        CharacterFactory characterFactory = new CharacterFactory(random);
         List<Individual> pop ;
         Integer variant = jsonObject.get("variant").getAsInt();
         if(variant > 3 || variant < 1){

@@ -29,7 +29,7 @@ public class MarathonTest {
         Random random = new Random(123);
         TSVReader.fullData=false;
         Map<String,List<Double>> timeseries = new HashMap<>();
-        CharacterFactory characterFactory = new CharacterFactory();
+        CharacterFactory characterFactory = new CharacterFactory(random);
         Integer amount = 50;
         List<Individual> starting = characterFactory.createRandomWarrior(2,random,amount);
         String name = "TournamentTournamentFull";

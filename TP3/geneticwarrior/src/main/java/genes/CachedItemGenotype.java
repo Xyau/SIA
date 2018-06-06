@@ -15,15 +15,17 @@ import java.util.concurrent.RunnableFuture;
 public class CachedItemGenotype implements Genotype {
     private ItemType itemType;
     private ConcurrentLinkedQueue<ItemPhenotype> phenotypes;
+    private Random random;
 
-    public CachedItemGenotype(ItemType itemType, ConcurrentLinkedQueue<ItemPhenotype> phenotypes) {
+    public CachedItemGenotype(ItemType itemType, ConcurrentLinkedQueue<ItemPhenotype> phenotypes,Random random) {
         this.itemType = itemType;
         this.phenotypes = phenotypes;
+        this.random = random;
     }
 
     @Override
     public Phenotype getMutation(Phenotype phenotype, Double mutationRate) {
-        return getRandomPhenotype(new Random());
+        return getRandomPhenotype(random);
     }
 
     @Override

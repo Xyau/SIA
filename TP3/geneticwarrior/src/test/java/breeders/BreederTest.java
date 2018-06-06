@@ -28,7 +28,7 @@ public class BreederTest {
     public void CrossoverBreederTest(){
         Random random = new Random();
         Breeder breeder = new AnularBreeder(new Random(),0.7f);
-        CharacterFactory characterFactory = new CharacterFactory();
+        CharacterFactory characterFactory = new CharacterFactory(random);
         List<Individual> startingPop = characterFactory.createRandomAssasin(1,random,2);
 
         System.out.println(startingPop);

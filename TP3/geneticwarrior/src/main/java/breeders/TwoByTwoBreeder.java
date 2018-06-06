@@ -40,6 +40,9 @@ public abstract class TwoByTwoBreeder implements Breeder {
                 logger.debug("offspring: " + directOffspring);
             }
         }
+        if(offspring.size() % 2 == 1){
+            offspring.add(champions.get(champions.size()-1));
+        }
         return offspring;
     }
 
