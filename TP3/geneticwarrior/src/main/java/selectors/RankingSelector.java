@@ -19,7 +19,7 @@ public class RankingSelector implements Selector {
         }
 
         ArrayList<Individual> sortedCandidates = new ArrayList<Individual>(candidates);
-        Collections.sort(sortedCandidates, (i1,i2)-> i1.getFitness() > i2.getFitness() ? 1 : -1);
+        Collections.sort(sortedCandidates, (i1,i2)-> i1.getFitness().compareTo(i2.getFitness()));
 
         List<Individual> champions = new ArrayList<>();
 

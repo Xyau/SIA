@@ -1,0 +1,17 @@
+{
+  "name" : "Tournament",
+  "experiment": "simple",
+  "breeder": "anular",
+  "chanceToBreed": "0.9",
+  "mutator": "uniform",
+  "chanceToMutate": 0.08,
+  "mutationStrength": 1,
+  "selector": "randomTournament",
+  "replacement": "randomTournament",
+  "type": "warrior",
+  "variant": 2,
+  "amount": 200,
+  "dataset":"full",
+  "maxGenerations": 10000,
+  "seed":700
+}
