@@ -5,6 +5,7 @@ import genes.Species;
 import individuals.Individual;
 import interfaces.Mutator;
 import interfaces.Phenotype;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 import java.util.Random;
@@ -17,11 +18,13 @@ public class EvolvingMutator implements Mutator {
 
     public EvolvingMutator(Double startRatio, Double endRatio, Integer duration, Random random) {
         this.random = random;
-        this.evaluator = (generation->startRatio*(1-((generation.doubleValue())/duration))+endRatio*(generation.doubleValue()/duration));
+        this.evaluator = (generation ->
+                startRatio * (1 - ((Math.min(generation.doubleValue(), duration) / duration)) +
+                        endRatio * (Math.min(generation.doubleValue(), duration) / duration)));
     }
-
     @Override
     public List<Individual> mutate(List<Individual> individualsToMutate,Integer genNumber) {
+        Logger.getRootLogger().info("Mutation Rate gen " + genNumber + " :" + evaluator.apply(genNumber));
         return individualsToMutate.stream()
                 .map( individual -> (random.nextDouble() < evaluator.apply(genNumber))?mutate(individual):individual)
                 .collect(Collectors.toList());
