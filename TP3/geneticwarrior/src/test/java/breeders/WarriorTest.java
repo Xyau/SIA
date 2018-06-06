@@ -13,10 +13,10 @@ import java.util.Random;
 public class WarriorTest {
     @Test
     public void test(){
-        Species species = Character.generateSpecies();
+        Species species = Character.generateSpecies(new Random());
         List<Individual> startingPop = new ArrayList<>();
         Random random = new Random();
-        CharacterFactory characterFactory = new CharacterFactory();
+        CharacterFactory characterFactory = new CharacterFactory(new Random());
         startingPop.addAll(characterFactory.createRandomWarrior(2,random,3));
 
         System.out.println(species);

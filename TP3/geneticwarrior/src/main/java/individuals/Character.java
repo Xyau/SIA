@@ -49,14 +49,14 @@ public class Character extends Individual {
         fitness = getFitness();
     }
 
-    public static Species generateSpecies(){
+    public static Species generateSpecies(Random random){
         List<Genotype> genotypes;
         if(!TSVReader.fullData){
             genotypes= Arrays.asList(ItemType.values()).parallelStream().map(
-                    item->new ItemGenotype(item,TSVReader.parseFile(TSVReader.getPath(item),item))).collect(Collectors.toList());
+                    item->new ItemGenotype(item,TSVReader.parseFile(TSVReader.getPath(item),item),random)).collect(Collectors.toList());
         } else {
             genotypes = Arrays.asList(ItemType.values()).parallelStream()
-                    .map(itemType -> new CachedItemGenotype(itemType,new ConcurrentLinkedQueue<>())).collect(Collectors.toList());
+                    .map(itemType -> new CachedItemGenotype(itemType,new ConcurrentLinkedQueue<>(),random)).collect(Collectors.toList());
         }
 
 //        genotypes.add(new ItemGenotype(ItemType.BOOTS,TSVReader.parseFile(ItemType.BOOTS)));

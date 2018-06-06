@@ -1,24 +1,24 @@
 {
   "name" : "Simple",
-  "experiment": "complex",
+  "experiment": "normal",
 
   "breeder": "anular",
   "chanceToBreed": "0.9",
 
   "mutator": "evolving",
   "startRatio": "1.0",
-  "endRatio": "0.1",
+  "endRatio": "1.0",
   "duration": "10000",
 
   "selector": {
     "first":"elite",
     "second":"squared",
-    "firstToTotalRatio":"0.3"
+    "firstToTotalRatio":"0.15"
   },
   "replacement": {
     "first":"elite",
     "second":"random",
-    "firstToTotalRatio":"0.15"
+    "firstToTotalRatio":"0.3"
   },
   "type": "warrior",
   "variant": 2,

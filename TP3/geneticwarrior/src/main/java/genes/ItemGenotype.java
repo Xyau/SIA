@@ -10,15 +10,17 @@ import java.util.Random;
 public class ItemGenotype implements Genotype {
     private ItemType itemType;
     private List<ItemPhenotype> phenotypes;
+    private Random random;
 
-    public ItemGenotype(ItemType itemType, List<ItemPhenotype> phenotypes) {
+    public ItemGenotype(ItemType itemType, List<ItemPhenotype> phenotypes, Random random) {
         this.itemType = itemType;
         this.phenotypes = phenotypes;
+        this.random = random;
     }
 
     @Override
     public Phenotype getMutation(Phenotype phenotype, Double mutationRate) {
-        return getRandomPhenotype(new Random());
+        return getRandomPhenotype(random);
     }
 
     @Override

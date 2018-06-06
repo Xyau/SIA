@@ -18,8 +18,8 @@ public class CharacterFactory {
 
     Species species;
 
-    public CharacterFactory(){
-        species = Character.generateSpecies();
+    public CharacterFactory(Random random){
+        species = Character.generateSpecies(random);
     }
 
     public List<Individual> createRandomWarrior(Integer variant, Random random, Integer amount){

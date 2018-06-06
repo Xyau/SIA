@@ -28,7 +28,7 @@ public class Experiments {
         Random random = new Random(124);
         TSVReader.fullData=true;
         Map<String,List<Double>> timeseries = new HashMap<>();
-        CharacterFactory characterFactory = new CharacterFactory();
+        CharacterFactory characterFactory = new CharacterFactory(random);
         List<Individual> starting = characterFactory.createRandomWarrior(2,random,30);
 
         builder.addMutator(new SimpleMutator(0.5,1d,random))
@@ -76,7 +76,7 @@ public class Experiments {
         Random random = new Random(221);
         TSVReader.fullData=true;
         Map<String,List<Double>> timeseries = new HashMap<>();
-        CharacterFactory characterFactory = new CharacterFactory();
+        CharacterFactory characterFactory = new CharacterFactory(random);
         List<Individual> starting = characterFactory.createRandomWarrior(2,random,50);
 
         builder.addMutator(new EvolvingMutator(1d,0.2,15000,random))
@@ -115,7 +115,7 @@ public class Experiments {
         TSVReader.amount=10000d;
         TSVReader.fullData=true;
         Map<String,List<Double>> timeseries = new HashMap<>();
-        CharacterFactory characterFactory = new CharacterFactory();
+        CharacterFactory characterFactory = new CharacterFactory(random);
         List<Individual> starting = characterFactory.createRandomWarrior(2,random,20);
 
         builder.addMutator(new EvolvingMutator(1d,0.8,400,random))
