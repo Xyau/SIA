@@ -76,6 +76,7 @@ El archivo de configuración es un JSON. Los objetos que componen a este JSON so
         * "tourneySize" (int): el tamaño del torneo.
     * "randomTournament": torneo estocástico
     * "ranking": ranking
+    * "random": random
     * si es un objeto, usa configuración mixta y el objeto recibe los siguientes parametros:
         * "first" (str): nombre de un método de selección de los previamente mencionados.
         * "second" (str): al igual que "first", exige el nombre de un método de selección.
